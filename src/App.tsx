@@ -1,8 +1,12 @@
-import Navbar from './components/Navbar'
+import NavAndHero from "./components/NavAndHero"
 
 const App = () => {
   return (
-    <Navbar />
+    <>
+      <div className='bg-black h-full pt-4'>
+        <NavAndHero />
+      </div>
+    </>
   )
 }
 
