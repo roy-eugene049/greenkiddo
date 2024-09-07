@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import SignUp from "./Auth/SignUp";
 import Hero from './components/Hero';
+import '@fontsource/roboto'; 
 
 const App = () => {
   return (
@@ -11,7 +12,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Hero />} />
           <Route path="/signup" element={<SignUp />} />
-          {/* Other routes */}
         </Routes>
       </div>
     </Router>
