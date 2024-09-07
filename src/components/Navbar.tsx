@@ -1,13 +1,12 @@
-// src/components/Navbar.tsx
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <div className="navbar text-white rounded-full p-2 border border-white/20 max-w-6xl mx-auto shadow-lg">
       <div className="navbar-start">
-        <p className="text-xl ml-2 font-bold normal-case text-white">
+        <Link to="/" className="text-xl ml-2 font-bold normal-case text-white">
           GreenKiddo
-        </p>
+        </Link>
       </div>
 
       <div className="navbar-center hidden lg:flex">
