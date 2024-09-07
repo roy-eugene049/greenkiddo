@@ -1,6 +1,29 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+// Zod schema for form validation
+const schema = z.object({
+  name: z.string().min(1, "Full name is required").max(50, "Full name can't exceed 50 characters"),
+  email: z.string().email("Please enter a valid email address")
+});
 
 const SignUp = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema), // Use zod for form validation
+  });
+
+  // Handle form submission
+  const onSubmit = (data) => {
+    console.log(data);
+    // Submit data to API or handle form submission logic
+  };
+
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white px-4">
       <h2 className="text-xl mb-2 text-gray-400">GreenKiddo | E-learning Magic</h2>
@@ -8,21 +31,29 @@ const SignUp = () => {
         Join the waitlist for the <br /> <span className="text-green-500">GreenKiddo Beta Platform</span>
       </h1>
 
-      <form className="w-full max-w-md space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md space-y-4">
         <div className="relative">
           <input
             type="text"
             placeholder="Full name..."
-            className="w-full bg-transparent border-b-2 border-gray-600 text-white placeholder-gray-500 focus:outline-none focus:border-green-500 py-2 px-3"
+            {...register('name')}
+            className={`text-center w-full bg-transparent border-b-2 ${
+              errors.name ? 'border-red-500' : 'border-gray-600'
+            } text-white placeholder-gray-500 focus:outline-none focus:border-green-500 py-2 px-3`}
           />
+          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
         </div>
 
         <div className="relative">
           <input
             type="email"
             placeholder="Address email..."
-            className="w-full bg-transparent border-b-2 border-gray-600 text-white placeholder-gray-500 focus:outline-none focus:border-green-500 py-2 px-3"
+            {...register('email')}
+            className={`text-center w-full bg-transparent border-b-2 ${
+              errors.email ? 'border-red-500' : 'border-gray-600'
+            } text-white placeholder-gray-500 focus:outline-none focus:border-green-500 py-2 px-3`}
           />
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
         </div>
 
         <button
