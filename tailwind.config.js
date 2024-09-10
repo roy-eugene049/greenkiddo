@@ -3,6 +3,11 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      colors: {
+        green: {
+          ecco: '#34f63a',
+        },
+      },
       fontFamily: {
         sans: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],
       },
@@ -12,4 +17,3 @@ export default {
     require('daisyui'),
   ],
 }
-

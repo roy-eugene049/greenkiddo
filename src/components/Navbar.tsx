@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { SignedIn, SignedOut, SignInButton, UserButton, SignOutButton } from "@clerk/clerk-react";
 import { motion } from "framer-motion";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to toggle mobile menu
-
   const toggleMenu = () => setIsOpen(!isOpen); // Toggle function
+
+  const location = useLocation(); // Get the current route
+
+  const isActiveRoute = (path: string) => location.pathname === path; // Check if route matches
 
   return (
     <div className="navbar sticky top-4 z-50 bg-black/80 backdrop-blur-lg text-white rounded-full p-2 border border-white/20 max-w-6xl mx-auto shadow-lg shadow-black/40">
       <div className="navbar-start">
-        <Link to="/" className="text-xl ml-2 font-bold normal-case text-white">
+        <Link to="/" className="text-xl ml-2 font-bold normal-case text-green-ecco">
           GreenKiddo
         </Link>
       </div>
@@ -42,21 +45,37 @@ const Navbar = () => {
       {/* Menu for larger screens */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-        <Link to="/about">
-            <li><a className="font-semibold text-white">About</a></li>
+          <li>
+            <Link to="/about">
+              <a className={`font-semibold ${isActiveRoute("/about") ? "text-green-ecco" : "text-white"}`}>
+                About
+              </a>
             </Link>
+          </li>
 
+          <li>
             <Link to="/services">
-            <li><a className="font-semibold text-white">Services</a></li>
+              <a className={`font-semibold ${isActiveRoute("/services") ? "text-green-ecco" : "text-white"}`}>
+                Services
+              </a>
             </Link>
+          </li>
 
+          <li>
             <Link to="/contact">
-              <li><a className="font-semibold text-white">Contact</a></li>
+              <a className={`font-semibold ${isActiveRoute("/contact") ? "text-green-ecco" : "text-white"}`}>
+                Contact
+              </a>
             </Link>
-            
+          </li>
+
+          <li>
             <Link to="/blog">
-              <li><a className="font-semibold text-white">Blog</a></li>
+              <a className={`font-semibold ${isActiveRoute("/blog") ? "text-green-ecco" : "text-white"}`}>
+                Blog
+              </a>
             </Link>
+          </li>
         </ul>
       </div>
 
@@ -64,21 +83,37 @@ const Navbar = () => {
       {isOpen && (
         <div className="navbar-center lg:hidden absolute top-full left-0 w-full bg-black/80 backdrop-blur-lg rounded-lg shadow-lg">
           <ul className="menu px-2 py-3 space-y-2">
-            <Link to="/about">
-            <li><a className="font-semibold text-white">About</a></li>
-            </Link>
+            <li>
+              <Link to="/about">
+                <a className={`font-semibold ${isActiveRoute("/about") ? "text-green-ecco" : "text-white"}`}>
+                  About
+                </a>
+              </Link>
+            </li>
 
-            <Link to="/services">
-            <li><a className="font-semibold text-white">Services</a></li>
-            </Link>
+            <li>
+              <Link to="/services">
+                <a className={`font-semibold ${isActiveRoute("/services") ? "text-green-ecco" : "text-white"}`}>
+                  Services
+                </a>
+              </Link>
+            </li>
 
-            <Link to="/contact">
-              <li><a className="font-semibold text-white">Contact</a></li>
-            </Link>
-            
-            <Link to="/blog">
-              <li><a className="font-semibold text-white">Blog</a></li>
-            </Link>
+            <li>
+              <Link to="/contact">
+                <a className={`font-semibold ${isActiveRoute("/contact") ? "text-green-ecco" : "text-white"}`}>
+                  Contact
+                </a>
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/blog">
+                <a className={`font-semibold ${isActiveRoute("/blog") ? "text-green-ecco" : "text-white"}`}>
+                  Blog
+                </a>
+              </Link>
+            </li>
           </ul>
         </div>
       )}
@@ -89,7 +124,7 @@ const Navbar = () => {
         <SignedOut>
           <SignInButton>
             <motion.button whileTap={{ scale: 0.85 }}>
-              <a className="btn bg-green-500 text-green-900 rounded-full px-5 font-bold border border-green-800">
+              <a className="btn bg-green-ecco text-green-900 rounded-full px-5 font-bold border border-green-800">
                 Sign In
               </a>
             </motion.button>
