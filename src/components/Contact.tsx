@@ -2,9 +2,9 @@ import React from 'react';
 
 const Contact = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-black">
+    <div className="flex justify-center items-center min-h-screen bg-black mt-6">
       <div className="bg-black border border-white/20 text-white p-10 rounded-lg shadow-md w-full max-w-4xl">
-        <h1 className="text-3xl font-bold mb-6 text-center">
+        <h1 className="text-3xl font-bold mb-6 text-center text-green-ecco">
           Let's Have a Chat <span className="wave-emoji">👋</span>
         </h1>
         <p className="text-center mb-8">
