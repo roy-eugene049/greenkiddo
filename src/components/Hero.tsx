@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { SignUpButton } from "@clerk/clerk-react";
 
 const Hero = () => {
   return (
@@ -38,7 +38,7 @@ const Hero = () => {
             Help kids become sustainability champions with fun and interactive lessons on how to protect our planet. Join the journey to a greener future.
           </motion.p>
 
-          <Link to="/signup">
+          <SignUpButton>
             <motion.button
               className="bg-green-500 text-green-950 font-bold py-3 px-6 rounded-full shadow-md hover:bg-green-600 transition duration-300 mb-4"
               whileHover={{ scale: 1.05 }}
@@ -46,9 +46,9 @@ const Hero = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1 }}
             >
-              Get Started
+                Join the Waitlist
             </motion.button>
-          </Link>
+          </SignUpButton>
         </motion.div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
+import { SignedIn, SignedOut, SignInButton, UserButton, SignOutButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   return (
-    <div className="navbar text-white rounded-full p-2 border border-white/20 max-w-6xl mx-auto shadow-lg">
+    <div className="navbar sticky top-4 z-50 bg-black/80 backdrop-blur-lg text-white rounded-full p-2 border border-white/20 max-w-6xl mx-auto shadow-lg shadow-black/40">
       <div className="navbar-start">
         <Link to="/" className="text-xl ml-2 font-bold normal-case text-white">
           GreenKiddo
@@ -18,10 +19,26 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="navbar-end">
-        <a className="btn bg-green-500 text-green-900 rounded-full px-5 font-bold border border-green-800">
-          Download Now
-        </a>
+      <div className="navbar-end flex items-center space-x-4">
+        {/* When user is signed out */}
+        <SignedOut>
+          <SignInButton>
+            <a className="btn bg-green-500 text-green-900 rounded-full px-5 font-bold border border-green-800">
+              Sign In
+            </a>
+          </SignInButton>
+        </SignedOut>
+
+        {/* When user is signed in */}
+        <SignedIn>
+          <UserButton />
+          
+          <SignOutButton>
+            <a className="btn bg-red-500 text-white rounded-full px-5 font-bold border border-red-800">
+              Sign Out
+            </a>
+          </SignOutButton>
+        </SignedIn>
       </div>
     </div>
   );
