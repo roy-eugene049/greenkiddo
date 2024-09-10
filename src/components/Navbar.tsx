@@ -41,16 +41,21 @@ const Navbar = () => {
       {/* Menu for larger screens */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-          <li><a className="font-semibold text-white">About</a></li>
-          <li><a className="font-semibold text-white">Services</a></li>
-          
-          <Link to="/contact">
-            <li><a className="font-semibold text-white">Contact</a></li>
-          </Link>
-          
-          <Link to="/blog">
-            <li><a className="font-semibold text-white">Blog</a></li>
-          </Link>
+        <Link to="/about">
+            <li><a className="font-semibold text-white">About</a></li>
+            </Link>
+
+            <Link to="/services">
+            <li><a className="font-semibold text-white">Services</a></li>
+            </Link>
+
+            <Link to="/contact">
+              <li><a className="font-semibold text-white">Contact</a></li>
+            </Link>
+            
+            <Link to="/blog">
+              <li><a className="font-semibold text-white">Blog</a></li>
+            </Link>
         </ul>
       </div>
 
@@ -58,9 +63,14 @@ const Navbar = () => {
       {isOpen && (
         <div className="navbar-center lg:hidden absolute top-full left-0 w-full bg-black/80 backdrop-blur-lg rounded-lg shadow-lg">
           <ul className="menu px-2 py-3 space-y-2">
+            <Link to="/about">
             <li><a className="font-semibold text-white">About</a></li>
+            </Link>
+
+            <Link to="/services">
             <li><a className="font-semibold text-white">Services</a></li>
-            
+            </Link>
+
             <Link to="/contact">
               <li><a className="font-semibold text-white">Contact</a></li>
             </Link>
