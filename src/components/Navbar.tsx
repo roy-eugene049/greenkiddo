@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SignedIn, SignedOut, SignInButton, UserButton, SignOutButton } from "@clerk/clerk-react";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to toggle mobile menu
@@ -87,20 +88,23 @@ const Navbar = () => {
         {/* When user is signed out */}
         <SignedOut>
           <SignInButton>
-            <a className="btn bg-green-500 text-green-900 rounded-full px-5 font-bold border border-green-800">
-              Sign In
-            </a>
+            <motion.button whileTap={{ scale: 0.85 }}>
+              <a className="btn bg-green-500 text-green-900 rounded-full px-5 font-bold border border-green-800">
+                Sign In
+              </a>
+            </motion.button>
           </SignInButton>
         </SignedOut>
 
         {/* When user is signed in */}
         <SignedIn>
           <UserButton />
-          
           <SignOutButton>
-            <a className="btn bg-red-500 text-white rounded-full px-5 font-bold border border-red-800">
-              Sign Out
-            </a>
+            <motion.button whileTap={{ scale: 0.85 }}>
+              <a className="btn bg-red-500 text-white rounded-full px-5 font-bold border border-red-800">
+                Sign Out
+              </a>
+            </motion.button>
           </SignOutButton>
         </SignedIn>
       </div>
