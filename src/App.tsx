@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Navbar, Hero, Blog, Contact, About, Services } from './components';
+import { Navbar, Hero, Blog, Contact, About, Services, Footer } from './components';
 
 import '@fontsource/roboto'; 
 
@@ -15,6 +15,7 @@ const App = () => {
           <Route path='/about' element={<About />} />
           <Route path='/services' element={<Services />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );

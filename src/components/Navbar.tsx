@@ -12,7 +12,7 @@ const Navbar = () => {
   const isActiveRoute = (path: string) => location.pathname === path; // Check if route matches
 
   return (
-    <div className="navbar sticky top-4 z-50 bg-black/80 backdrop-blur-lg text-white rounded-full p-2 border border-white/20 max-w-6xl mx-auto shadow-lg shadow-black/40">
+    <div className="navbar space-x-10 sticky top-4 z-50 bg-black/80 backdrop-blur-lg text-white rounded-full p-2 border border-white/20 max-w-6xl mx-auto shadow-lg shadow-black/40">
       <div className="navbar-start">
         <Link to="/" className="text-xl ml-2 font-bold normal-case text-green-ecco">
           GreenKiddo

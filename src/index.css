@@ -8,3 +8,22 @@ html, body {
     background-color: black;
     height: 100%;
   }
+
+  /* Custom Toggle Colors */
+.custom-toggle {
+  --tw-toggle-background: #d1d5db; /* Default gray background for unchecked */
+  --tw-toggle-check-background: #32CD32; /* Your custom green for checked state */
+  --tw-toggle-check-border: #32CD32; /* Border color for checked state */
+  --tw-toggle-border-color: #6b7280; /* Border color for unchecked state */
+  --tw-toggle-focus-ring: #32CD32; /* Focus ring color */
+}
+
+.custom-toggle:checked {
+  background-color: var(--tw-toggle-check-background);
+  border-color: var(--tw-toggle-check-border);
+}
+
+.custom-toggle:focus {
+  outline: 2px solid var(--tw-toggle-focus-ring);
+  outline-offset: 2px;
+}
