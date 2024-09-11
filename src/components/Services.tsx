@@ -26,8 +26,8 @@ const Services = () => {
         <div className="col-span-1 md:col-span-2 p-6 rounded-lg"
           style={{
             background: '#1A1A1A', 
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 20px #333333',
+            backdropFilter: 'blur(40px)',
+            boxShadow: '0 4px 5px #FFFFFF',
             border: '1px solid #333333',
           }}>
           <h3 className="text-xl font-semibold mb-4">Learning Dashboard</h3>
@@ -54,7 +54,7 @@ const Services = () => {
           style={{
             background: '#1A1A1A',
             backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 20px #333333',
+            boxShadow: '0 4px 5px #34f63a',
             border: '1px solid #333333'
           }}>
           <h3 className="text-xl font-semibold mb-4">Expert-Led Content</h3>
@@ -69,7 +69,7 @@ const Services = () => {
           style={{
             background: '#1A1A1A',
             backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 20px #333333',
+            boxShadow: '0 4px 5px #FFFFFF',
             border: '1px solid #333333'
           }}>
           <h3 className="text-xl font-semibold mb-4">Affordable Subscription</h3>
@@ -83,8 +83,8 @@ const Services = () => {
         <div className="p-6 rounded-lg flex flex-col max-h-90"
           style={{
             background: '#1A1A1A',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 20px #333333',
+            backdropFilter: 'blur(50px)',
+            boxShadow: '0 4px 5px #FFFFFF',
             border: '1px solid #333333'
           }}>
           <h3 className="text-xl font-semibold mb-4">Your Journey, Your Way</h3>
@@ -99,7 +99,7 @@ const Services = () => {
           style={{
             background: '#1A1A1A',
             backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 20px #333333',
+            boxShadow: '0 4px 5px #FFFFFF',
             border: '1px solid #333333'
           }}>
           <div>
@@ -117,7 +117,7 @@ const Services = () => {
           style={{
             background: '#1A1A1A',
             backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 20px #333333',
+            boxShadow: '0 4px 5px #FFFFFF',
             border: '1px solid #333333'
           }}>
           <h3 className="text-xl font-semibold mb-4">Community Forum</h3>
