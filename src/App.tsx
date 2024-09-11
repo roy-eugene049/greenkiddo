@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Navbar, Hero, Blog, Contact, AboutUs, Services, Footer } from './components';
+import '@fontsource/inter/400.css'; 
+import '@fontsource/inter/700.css'; 
 
-import '@fontsource/roboto'; 
 
 const App = () => {
   return (

@@ -9,7 +9,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
       },
     },
   },
