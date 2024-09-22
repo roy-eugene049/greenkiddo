@@ -45,6 +45,14 @@ const Navbar = () => {
       {/* Menu for larger screens */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
+        <li>
+            <Link to="/">
+              <a className={`font-semibold ${isActiveRoute("/") ? "text-green-ecco" : "text-white"}`}>
+                Home
+              </a>
+            </Link>
+          </li>
+
           <li>
             <Link to="/about">
               <a className={`font-semibold ${isActiveRoute("/about") ? "text-green-ecco" : "text-white"}`}>

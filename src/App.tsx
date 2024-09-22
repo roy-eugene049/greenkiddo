@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Navbar, Hero, Blog, Contact, AboutUs, Services, Footer } from './components';
+import { Navbar, Hero, Blog, Contact, AboutUs, Services, Footer, ComingSoon } from './components';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css'; 
 
@@ -15,6 +15,7 @@ const App = () => {
           <Route path='/contact' element={<Contact />} />
           <Route path='/about' element={<AboutUs />} />
           <Route path='/services' element={<Services />} />
+          <Route path='/services' element={<ComingSoon />} />
         </Routes>
         <Footer />
       </div>
