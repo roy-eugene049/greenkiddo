@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { SignUpButton } from "@clerk/clerk-react";
+import { dark } from '@clerk/themes'
 
 const text =
   "Help kids become sustainability champions with fun and interactive lessons on how to protect our planet. Join the journey to a greener future.".split(
