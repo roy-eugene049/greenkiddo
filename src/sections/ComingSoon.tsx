@@ -1,8 +1,21 @@
 import { motion } from "framer-motion"
 import { Leaf } from "lucide-react"
+import { useUser } from "@clerk/clerk-react"
+import { useLocation } from "react-router-dom"
 
 
 const ComingSoon = () => {
+  const { user, isLoaded } = useUser()
+  const location = useLocation()
+  const isNewSignUp = location.state?.isNewSignUp
+
+  const getMessage = () => {
+    if (!isLoaded) return "Loading..."
+    if (isNewSignUp) return "Thank You for Signing Up!"
+    if (user) return "Welcome Back!"
+    return "Coming Soon"
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white p-4">
       <motion.div 
@@ -12,9 +25,9 @@ const ComingSoon = () => {
         className="max-w-2xl mx-auto text-center"
       >
         <Leaf className="w-16 h-16 mx-auto mb-8 text-green-ecco" />
-        <h1 className="text-4xl font-bold mb-6">Coming <span className="text-green-ecco">Soon</span> </h1>
+        <h1 className="text-4xl font-bold mb-6">{getMessage()}</h1>
         <p className="text-xl mb-8">
-          Thank you for joining <span className="text-green-ecco">GreenKiddo</span>, where sustainability meets learning!
+          {isNewSignUp ? "Welcome to" : "Thank you for joining"} <span className="text-green-ecco">GreenKiddo</span>, where sustainability meets learning!
         </p>
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
           <h2 className="text-2xl font-semibold mb-4 text-green-ecco">What to Expect</h2>
