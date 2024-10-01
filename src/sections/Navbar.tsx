@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { SignedIn, SignedOut, SignInButton, UserButton, SignUpButton } from "@clerk/clerk-react";
+import { SignedOut, SignInButton } from "@clerk/clerk-react";
 import { motion } from "framer-motion";
 
 const Navbar = () => {
@@ -129,7 +129,7 @@ const Navbar = () => {
       {/* Auth Buttons */}
       <div className="navbar-end hidden lg:flex items-center space-x-4">
         <SignedOut>
-          <SignInButton redirectUrl="/comingsoon">
+          <SignInButton>
             <motion.button whileTap={{ scale: 0.85 }}>
               <a className="btn bg-green-ecco text-green-900 rounded-full px-5 font-bold border border-green-800">
                 Sign In

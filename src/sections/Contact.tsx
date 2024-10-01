@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Contact = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-black mt-6 m-6">

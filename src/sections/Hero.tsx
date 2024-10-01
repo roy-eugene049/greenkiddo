@@ -86,14 +86,23 @@ const Hero = () => {
           </motion.h1>
 
           <motion.p
-            className="text-md md:text-lg text-green-ecco mb-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.7 }}
+      className="text-md md:text-lg text-green-ecco mb-8"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.7 }}
+    >
+        {text.map((word, index) => (
+          <motion.span
+            key={index}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="inline-block mr-1"
           >
-            Help kids become sustainability champions with fun and interactive lessons on how
-            to protect our planet. Join the journey to a greener future.
-          </motion.p>
+            {word}
+          </motion.span>
+        ))}
+      </motion.p>
 
           <SignUpButton>
             <motion.button
