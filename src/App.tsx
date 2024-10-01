@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { Navbar, Hero, Blog, Contact, AboutUs, Services, Footer, ComingSoon } from './sections';
-import { SignedIn, SignedOut } from "@clerk/clerk-react"
+import { SignedIn } from "@clerk/clerk-react"
 import ProtectedRoute from './components/ProtectedRoute';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
