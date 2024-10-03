@@ -5,40 +5,46 @@ const elcImg = "https://images.unsplash.com/photo-1579567761406-4684ee0c75b6?w=5
 const asImg = "https://images.unsplash.com/photo-1555448248-2571daf6344b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFic3RyYWN0fGVufDB8MXwwfHx8MA%3D%3D";
 const yjywImg = "https://plus.unsplash.com/premium_photo-1664640458531-3c7cca2a9323?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YWJzdHJhY3R8ZW58MHwxfDB8fHww";
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 }
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1, 
+    transition: { 
+      staggerChildren: 0.1,
+      when: "beforeChildren"
+    } 
+  }
 };
 
-const hoverScale = {
-  scale: 1.05,
-  transition: { duration: 0.3 }
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6 }
+  }
 };
 
 export default function Services() {
   return (
     <motion.div 
       className="min-h-screen bg-black text-white flex flex-col items-center py-12 m-4"
-      initial="initial"
-      animate="animate"
-      variants={{
-        initial: { opacity: 0 },
-        animate: { opacity: 1, transition: { staggerChildren: 0.1 } }
-      }}
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
     >
       {/* Header Section */}
-      <motion.div className="text-center mb-16" variants={fadeInUp}>
+      <motion.div className="text-center mb-16" variants={itemVariants}>
         <motion.span 
           className="bg-[#32CD32] text-black rounded-full px-4 py-1 mb-2 inline-block text-sm"
-          whileHover={hoverScale}
+          whileHover={{ scale: 1.05 }}
         >
           Why Choose Us
         </motion.span>
-        <motion.h1 className="text-4xl font-bold mt-4" variants={fadeInUp}>
+        <motion.h1 className="text-4xl font-bold mt-4" variants={itemVariants}>
           The Only Sustainability Learning Platform You'll <span className="text-[#32CD32]">Ever Need</span>
         </motion.h1>
-        <motion.p className="mt-4 text-lg" variants={fadeInUp}>
+        <motion.p className="mt-4 text-lg" variants={itemVariants}>
           Explore a world of sustainable practices with our curated courses, expert-led workshops, and a passionate community.
         </motion.p>
       </motion.div>
@@ -46,21 +52,18 @@ export default function Services() {
       {/* Bento Grid */}
       <motion.div 
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full"
-        variants={{
-          initial: { opacity: 0 },
-          animate: { opacity: 1, transition: { staggerChildren: 0.1 } }
-        }}
+        variants={containerVariants}
       >
         {/* Learning Dashboard */}
         <motion.div 
           className="col-span-1 md:col-span-2 p-6 rounded-lg"
           style={{
-            background: '#1A1A1A', 
+            background: 'black', 
             backdropFilter: 'blur(40px)',
             border: '1px solid #333333',
           }}
-          variants={fadeInUp}
-          whileHover={hoverScale}
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
         >
           <h3 className="text-xl font-semibold mb-4">Learning Dashboard</h3>
           <p className="mb-4">Access a variety of courses and track your progress towards becoming a sustainability expert.</p>
@@ -100,12 +103,12 @@ export default function Services() {
         <motion.div 
           className="row-span-2 p-6 rounded-lg flex flex-col"
           style={{
-            background: '#1A1A1A',
+            background: 'black',
             backdropFilter: 'blur(20px)',
             border: '1px solid #333333'
           }}
-          variants={fadeInUp}
-          whileHover={hoverScale}
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
         >
           <h3 className="text-xl font-semibold mb-4">Expert-Led Content</h3>
           <p>Learn from the best in the field with content created by sustainability experts and thought leaders.</p>
@@ -118,12 +121,12 @@ export default function Services() {
         <motion.div 
           className="p-6 rounded-lg flex flex-col max-h-90"
           style={{
-            background: '#1A1A1A',
+            background: 'black',
             backdropFilter: 'blur(20px)',
             border: '1px solid #333333'
           }}
-          variants={fadeInUp}
-          whileHover={hoverScale}
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
         >
           <h3 className="text-xl font-semibold mb-4">Affordable Subscription</h3>
           <p>Access all courses and resources with a simple, fixed monthly fee. No hidden charges.</p>
@@ -136,12 +139,12 @@ export default function Services() {
         <motion.div 
           className="p-6 rounded-lg flex flex-col max-h-90"
           style={{
-            background: '#1A1A1A',
+            background: 'black',
             backdropFilter: 'blur(50px)',
             border: '1px solid #333333'
           }}
-          variants={fadeInUp}
-          whileHover={hoverScale}
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
         >
           <h3 className="text-xl font-semibold mb-4">Your Journey, Your Way</h3>
           <p>Customize your learning experience and explore vast topics that matter most to you at the comfort of your home.</p>
@@ -154,12 +157,12 @@ export default function Services() {
         <motion.div 
           className="col-span-1 md:col-span-2 lg:col-span-2 p-6 rounded-lg flex items-center justify-between"
           style={{
-            background: '#1A1A1A',
+            background: 'black',
             backdropFilter: 'blur(20px)',
             border: '1px solid #333333'
           }}
-          variants={fadeInUp}
-          whileHover={hoverScale}
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
         >
           <div>
             <h3 className="text-xl font-semibold mb-4">Flexible Learning</h3>
@@ -181,12 +184,12 @@ export default function Services() {
         <motion.div 
           className="p-6 rounded-lg"
           style={{
-            background: '#1A1A1A',
+            background: 'black',
             backdropFilter: 'blur(20px)',
             border: '1px solid #333333'
           }}
-          variants={fadeInUp}
-          whileHover={hoverScale}
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
         >
           <h3 className="text-xl font-semibold mb-4">Community Forum</h3>
           <p>Join our community to discuss, share, and collaborate on sustainable living practices.</p>
