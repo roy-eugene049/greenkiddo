@@ -11,7 +11,7 @@ const Blog = () => {
             </p>
           </div>
           <div className="grid gap-8 lg:grid-cols-2">
-            <article className="p-6 backdrop-blur-md bg-white/10 rounded-lg border border-gray-700 shadow-md dark:bg-gray-800/60">
+            <article className="p-6 backdrop-blur-md bg-black rounded-lg border border-gray-700 shadow-md dark:bg-black">
               <div className="flex justify-between items-center mb-5 text-gray-400">
                 <span className="bg-green-ecco/10 text-green-ecco text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded">
                   <svg
@@ -61,7 +61,7 @@ const Blog = () => {
                 </a>
               </div>
             </article>
-            <article className="p-6 backdrop-blur-md bg-white/10 rounded-lg border border-gray-700 shadow-md dark:bg-gray-800/60">
+            <article className="p-6 backdrop-blur-md bg-black rounded-lg border border-gray-700 shadow-md dark:bg-black">
               <div className="flex justify-between items-center mb-5 text-gray-400">
                 <span className="bg-green-ecco/10 text-green-ecco text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded">
                   <svg
