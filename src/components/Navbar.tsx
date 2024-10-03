@@ -1,13 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { SignedOut, SignInButton } from "@clerk/clerk-react";
 import { motion } from "framer-motion";
+
+function useScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+}
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to toggle mobile menu
   const toggleMenu = () => setIsOpen(!isOpen); // Toggle function
 
   const location = useLocation(); // Get the current route
+
+  useScrollToTop();
 
   const isActiveRoute = (path: string) => location.pathname === path; // Check if route matches
 

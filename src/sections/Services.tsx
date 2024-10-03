@@ -65,7 +65,7 @@ export default function Services() {
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
         >
-          <h3 className="text-xl font-semibold mb-4">Learning Dashboard</h3>
+          <h3 className="text-xl font-bold mb-4">Learning Dashboard</h3>
           <p className="mb-4">Access a variety of courses and track your progress towards becoming a sustainability expert.</p>
           <motion.div 
             className="p-4 rounded-md space-y-4"
@@ -110,7 +110,7 @@ export default function Services() {
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
         >
-          <h3 className="text-xl font-semibold mb-4">Expert-Led Content</h3>
+          <h3 className="text-xl font-bold mb-4">Expert-Led Content</h3>
           <p>Learn from the best in the field with content created by sustainability experts and thought leaders.</p>
           <motion.div className="mt-4 flex-grow" whileHover={{ scale: 1.03 }}>
             <img src={elcImg} alt="Expert Content" className="w-full h-full object-cover rounded-lg" loading="lazy" />
@@ -128,7 +128,7 @@ export default function Services() {
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
         >
-          <h3 className="text-xl font-semibold mb-4">Affordable Subscription</h3>
+          <h3 className="text-xl font-bold mb-4">Affordable Subscription</h3>
           <p>Access all courses and resources with a simple, fixed monthly fee. No hidden charges.</p>
           <motion.div className="mt-4 flex-grow" whileHover={{ scale: 1.03 }}>
             <img src={asImg} alt="Subscription" className="w-full h-full object-cover rounded-lg max-h-60" loading="lazy" />
@@ -146,7 +146,7 @@ export default function Services() {
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
         >
-          <h3 className="text-xl font-semibold mb-4">Your Journey, Your Way</h3>
+          <h3 className="text-xl font-bold mb-4">Your Journey, Your Way</h3>
           <p>Customize your learning experience and explore vast topics that matter most to you at the comfort of your home.</p>
           <motion.div className="mt-4 flex-grow" whileHover={{ scale: 1.03 }}>
             <img src={yjywImg} alt="Customized Journey" className="w-full h-full object-cover rounded-lg max-h-60" loading="lazy" />
@@ -165,7 +165,7 @@ export default function Services() {
           whileHover={{ scale: 1.02 }}
         >
           <div>
-            <h3 className="text-xl font-semibold mb-4">Flexible Learning</h3>
+            <h3 className="text-xl font-bold mb-4">Flexible Learning</h3>
             <p>Learn at your own pace. Pause, resume, or even change your course at any time.</p>
           </div>
           <div className="flex items-center">
@@ -191,7 +191,7 @@ export default function Services() {
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
         >
-          <h3 className="text-xl font-semibold mb-4">Community Forum</h3>
+          <h3 className="text-xl font-bold mb-4">Community Forum</h3>
           <p>Join our community to discuss, share, and collaborate on sustainable living practices.</p>
         </motion.div>
       </motion.div>

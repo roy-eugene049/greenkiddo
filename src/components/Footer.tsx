@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Logo and Info */}
-          <div className="col-span-1 lg:col-span-2 ml-14 mr-14">
+          <div className="col-span-1 lg:col-span-2 mr-14">
             <svg
               width="50"
               height="50"
@@ -30,10 +30,10 @@ const Footer = () => {
           <div>
             <h6 className="text-green-ecco font-bold mb-4">Resources</h6>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">SaaS Development</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">Our Products</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">User Flow</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">User Strategy</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">SaaS Development</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">Our Products</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">User Flow</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">User Strategy</a></li>
             </ul>
           </div>
 
@@ -41,10 +41,10 @@ const Footer = () => {
           <div>
             <h6 className="text-green-ecco font-bold mb-4">Company</h6>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">About GreenKiddo</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">Contact & Support</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">Success History</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">Setting & Privacy</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">About GreenKiddo</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">Contact & Support</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">Success History</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">Setting & Privacy</a></li>
             </ul>
           </div>
 
@@ -52,10 +52,10 @@ const Footer = () => {
           <div>
             <h6 className="text-green-ecco font-bold mb-4">Quick Links</h6>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">Premium Support</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">Our Services</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">Know Our Team</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-green-500 transition">Download App</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">Premium Support</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">Our Services</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">Know Our Team</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-green-ecco transition">Download App</a></li>
             </ul>
           </div>
         </div>
