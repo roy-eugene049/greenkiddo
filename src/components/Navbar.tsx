@@ -34,6 +34,7 @@ const Navbar = () => {
         <button
           className="text-white focus:outline-none"
           onClick={toggleMenu}
+          title="logo"
         >
           <svg
             className="w-6 h-6"
