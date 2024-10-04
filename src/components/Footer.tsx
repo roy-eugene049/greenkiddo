@@ -63,16 +63,16 @@ const Footer = () => {
         <div className="mt-14 pt-8 border-t border-[#333333] flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} GreenKiddo. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-          <a href="#" className="text-gray-400 hover:text-green-ecco transition">
+          <a title='facebook' href="#" className="text-gray-400 hover:text-green-ecco transition">
               <FaFacebookF size={20} />
             </a>
-            <a href="#" className="text-gray-400 hover:text-green-ecco transition">
+            <a title='twitter' href="#" className="text-gray-400 hover:text-green-ecco transition">
               <FaTwitter size={20} />
             </a>
-            <a href="#" className="text-gray-400 hover:text-green-ecco transition">
+            <a title='youtube' href="#" className="text-gray-400 hover:text-green-ecco transition">
               <FaYoutube size={20} />
             </a>
-            <a href="#" className="text-gray-400 hover:text-green-ecco transition">
+            <a title='linkedin' href="#" className="text-gray-400 hover:text-green-ecco transition">
               <FaLinkedinIn size={20} />
             </a>
           </div>
