@@ -11,6 +11,7 @@ import Certificates from './pages/Certificates';
 import Achievements from './pages/Achievements';
 import Bookmarks from './pages/Bookmarks';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -49,7 +50,7 @@ const App = () => {
                 <Route path="/achievements" element={<Achievements />} />
                 <Route path="/bookmarks" element={<Bookmarks />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<div className="p-8"><h1>Settings</h1></div>} />
+                <Route path="/settings" element={<Settings />} />
               </Routes>
             </ProtectedRoute>
           }
