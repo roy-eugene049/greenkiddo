@@ -98,13 +98,6 @@ const Navbar = () => {
 
           <SignedIn>
             <li>
-              <Link to="/courses">
-                <a className={`font-semibold ${isActiveRoute("/courses") ? "text-green-ecco" : "text-white"}`}>
-                  Courses
-                </a>
-              </Link>
-            </li>
-            <li>
               <Link to="/dashboard">
                 <a className={`font-semibold ${isActiveRoute("/dashboard") ? "text-green-ecco" : "text-white"}`}>
                   Dashboard
@@ -152,13 +145,6 @@ const Navbar = () => {
             </li>
 
             <SignedIn>
-              <li>
-                <Link to="/courses">
-                  <a className={`font-semibold ${isActiveRoute("/courses") ? "text-green-ecco" : "text-white"}`}>
-                    Courses
-                  </a>
-                </Link>
-              </li>
               <li>
                 <Link to="/dashboard">
                   <a className={`font-semibold ${isActiveRoute("/dashboard") ? "text-green-ecco" : "text-white"}`}>
