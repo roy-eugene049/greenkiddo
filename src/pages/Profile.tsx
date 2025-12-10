@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { CourseService } from '../services/courseService';
@@ -14,9 +14,21 @@ import {
   GraduationCap,
   Trophy,
   Edit,
-  CheckCircle2
+  CheckCircle2,
+  X,
+  Save,
+  Sparkles
 } from 'lucide-react';
 import { mockBadges } from '../services/mockData';
+import {
+  getUserPreferences,
+  saveUserPreferences,
+  generateRandomEcoName,
+  getDisplayName,
+  getDisplayAvatar,
+  setAvatarOptions
+} from '../services/userPreferences';
+import { getAvatarOptions, refreshAvatarCache, type RandomUserAvatar } from '../services/avatarService';
 
 const Profile = () => {
   const { user } = useUser();
@@ -36,6 +48,25 @@ const Profile = () => {
     longestStreak: 0
   });
   const [loading, setLoading] = useState(true);
+  
+  // User preferences state
+  const [showNameEditor, setShowNameEditor] = useState(false);
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+  const [useEcoName, setUseEcoName] = useState(false);
+  const [selectedEcoName, setSelectedEcoName] = useState<string>('');
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const [availableAvatars, setAvailableAvatars] = useState<RandomUserAvatar[]>([]);
+  const [loadingAvatars, setLoadingAvatars] = useState(false);
+  
+  // Load user preferences
+  useEffect(() => {
+    if (user) {
+      const prefs = getUserPreferences(user.id);
+      setUseEcoName(prefs.useEcoName);
+      setSelectedEcoName(prefs.selectedEcoName || '');
+      setSelectedAvatar(prefs.selectedAvatar);
+    }
+  }, [user]);
 
   useEffect(() => {
     const loadProfileData = async () => {
@@ -94,6 +125,66 @@ const Profile = () => {
     return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
   };
 
+  const handleSaveNamePreference = () => {
+    if (!user) return;
+    
+    const prefs = {
+      useEcoName,
+      selectedEcoName: useEcoName ? selectedEcoName : null,
+      selectedAvatar: getUserPreferences(user.id).selectedAvatar
+    };
+    
+    saveUserPreferences(user.id, prefs);
+    setShowNameEditor(false);
+  };
+
+  const handleSaveAvatarPreference = () => {
+    if (!user) return;
+    
+    const selectedAvatarData = availableAvatars.find(a => a.id === selectedAvatar);
+    
+    const prefs = {
+      useEcoName: getUserPreferences(user.id).useEcoName,
+      selectedEcoName: getUserPreferences(user.id).selectedEcoName,
+      selectedAvatar: selectedAvatar || null,
+      selectedAvatarUrl: selectedAvatarData?.url || null
+    };
+    
+    saveUserPreferences(user.id, prefs);
+    setShowAvatarPicker(false);
+  };
+
+  // Load avatars when picker opens
+  useEffect(() => {
+    if (showAvatarPicker && availableAvatars.length === 0) {
+      setLoadingAvatars(true);
+      getAvatarOptions().then(avatars => {
+        setAvailableAvatars(avatars);
+        // Update the global avatarOptions for compatibility
+        setAvatarOptions(avatars);
+        setLoadingAvatars(false);
+      }).catch(() => {
+        setLoadingAvatars(false);
+      });
+    }
+  }, [showAvatarPicker, availableAvatars.length]);
+
+  const handleRefreshAvatars = async () => {
+    setLoadingAvatars(true);
+    const newAvatars = await refreshAvatarCache();
+    setAvailableAvatars(newAvatars);
+    setAvatarOptions(newAvatars);
+    setLoadingAvatars(false);
+  };
+
+  const handleRandomEcoName = () => {
+    setSelectedEcoName(generateRandomEcoName());
+  };
+
+  // Get display values
+  const displayName = user ? getDisplayName(user.id, user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User') : 'User';
+  const displayAvatar = user ? getDisplayAvatar(user.id, user.imageUrl) : { type: 'url' as const, value: 'https://api.dicebear.com/7.x/avataaars/svg?seed=User' };
+
   if (loading) {
     return (
       <DashboardLayout>
@@ -117,20 +208,20 @@ const Profile = () => {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               {/* Avatar */}
               <div className="relative">
-                {user?.imageUrl ? (
-                  <img
-                    src={user.imageUrl}
-                    alt={user.firstName || 'User'}
-                    className="w-24 h-24 rounded-full border-4 border-green-ecco"
-                  />
-                ) : (
-                  <div className="w-24 h-24 rounded-full bg-green-ecco flex items-center justify-center border-4 border-green-ecco">
-                    <span className="text-black text-3xl font-bold">
-                      {user?.firstName?.[0] || 'U'}
-                    </span>
-                  </div>
-                )}
-                <button className="absolute bottom-0 right-0 p-2 bg-gray-800 rounded-full border-2 border-gray-700 hover:border-green-ecco transition-colors">
+                <img
+                  src={displayAvatar.value}
+                  alt={displayName}
+                  className="w-24 h-24 rounded-full border-4 border-green-ecco object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id || 'User'}`;
+                  }}
+                />
+                <button
+                  onClick={() => setShowAvatarPicker(true)}
+                  className="absolute bottom-0 right-0 p-2 bg-gray-800 rounded-full border-2 border-gray-700 hover:border-green-ecco transition-colors"
+                  title="Change Avatar"
+                >
                   <Edit className="w-4 h-4 text-gray-400" />
                 </button>
               </div>
@@ -138,12 +229,24 @@ const Profile = () => {
               {/* User Info */}
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl md:text-4xl font-bold">
-                    {user?.firstName || 'User'} {user?.lastName}
+                  <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-2">
+                    {displayName}
+                    {useEcoName && (
+                      <span className="text-lg text-green-ecco" title="Eco Champion Name">
+                        <Sparkles className="w-5 h-5" />
+                      </span>
+                    )}
                   </h1>
                   {user?.hasVerifiedEmailAddress && (
                     <CheckCircle2 className="w-6 h-6 text-green-ecco" />
                   )}
+                  <button
+                    onClick={() => setShowNameEditor(true)}
+                    className="ml-2 p-2 text-gray-400 hover:text-green-ecco transition-colors"
+                    title="Edit Display Name"
+                  >
+                    <Edit className="w-5 h-5" />
+                  </button>
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-gray-400 mb-4">
                   {user?.primaryEmailAddress && (
@@ -429,6 +532,308 @@ const Profile = () => {
             </motion.section>
           </div>
         </div>
+
+        {/* Name Editor Modal */}
+        <AnimatePresence>
+          {showNameEditor && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+                onClick={() => setShowNameEditor(false)}
+              >
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  className="bg-gray-900 border border-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                      <Sparkles className="w-6 h-6 text-green-ecco" />
+                      Choose Your Display Name
+                    </h2>
+                    <button
+                      onClick={() => setShowNameEditor(false)}
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Name Type Toggle */}
+                    <div className="flex items-center gap-4 p-4 bg-gray-800 rounded-lg">
+                      <label className="flex items-center gap-3 cursor-pointer flex-1">
+                        <input
+                          type="radio"
+                          checked={!useEcoName}
+                          onChange={() => setUseEcoName(false)}
+                          className="w-5 h-5 text-green-ecco"
+                        />
+                        <div>
+                          <div className="font-semibold text-white">Real Name</div>
+                          <div className="text-sm text-gray-400">
+                            {user?.fullName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'User'}
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+
+                    <div className="flex items-center gap-4 p-4 bg-gray-800 rounded-lg border-2 border-green-ecco/50">
+                      <label className="flex items-center gap-3 cursor-pointer flex-1">
+                        <input
+                          type="radio"
+                          checked={useEcoName}
+                          onChange={() => {
+                            setUseEcoName(true);
+                            if (!selectedEcoName) {
+                              setSelectedEcoName(generateRandomEcoName());
+                            }
+                          }}
+                          className="w-5 h-5 text-green-ecco"
+                        />
+                        <div>
+                          <div className="font-semibold text-white flex items-center gap-2">
+                            Eco Champion Name
+                            <Sparkles className="w-4 h-4 text-green-ecco" />
+                          </div>
+                          <div className="text-sm text-gray-400">
+                            Choose a fun eco-themed name
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+
+                    {/* Eco Name Generator */}
+                    {useEcoName && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-4"
+                      >
+                        <div className="text-center space-y-4">
+                          <div>
+                            <p className="text-gray-400 mb-4">
+                              Generate a unique eco champion name! Each click creates a brand new, creative name from millions of possible combinations.
+                            </p>
+                            <button
+                              onClick={handleRandomEcoName}
+                              className="w-full px-6 py-4 bg-green-ecco text-black rounded-lg hover:bg-green-400 transition-all font-bold text-lg flex items-center justify-center gap-3 shadow-lg hover:shadow-green-ecco/50 transform hover:scale-105"
+                            >
+                              <span className="text-2xl">🎲</span>
+                              <span>Generate Random Eco Name</span>
+                            </button>
+                          </div>
+
+                          {selectedEcoName && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              className="p-6 bg-green-ecco/10 border-2 border-green-ecco/30 rounded-lg"
+                            >
+                              <div className="text-sm text-gray-400 mb-2 flex items-center gap-2">
+                                <Sparkles className="w-4 h-4 text-green-ecco" />
+                                Your Eco Champion Name:
+                              </div>
+                              <div className="text-2xl font-bold text-green-ecco">{selectedEcoName}</div>
+                              <p className="text-xs text-gray-500 mt-2">
+                                Don't like it? Click the button above to generate another one!
+                              </p>
+                            </motion.div>
+                          )}
+
+                          {!selectedEcoName && (
+                            <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+                              <p className="text-sm text-gray-400">
+                                Click the button above to generate your unique eco champion name
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
+                      <button
+                        onClick={handleSaveNamePreference}
+                        disabled={useEcoName && !selectedEcoName}
+                        className="flex-1 px-6 py-3 bg-green-ecco text-black rounded-lg hover:bg-green-400 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        <Save className="w-5 h-5" />
+                        Save Name
+                      </button>
+                      <button
+                        onClick={() => setShowNameEditor(false)}
+                        className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* Avatar Picker Modal */}
+        <AnimatePresence>
+          {showAvatarPicker && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+                onClick={() => setShowAvatarPicker(false)}
+              >
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  className="bg-gray-900 border border-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                      Choose Your Avatar
+                    </h2>
+                    <button
+                      onClick={() => setShowAvatarPicker(false)}
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Use Account Avatar Option */}
+                    <div
+                      onClick={() => setSelectedAvatar(null)}
+                      className={`p-4 rounded-lg cursor-pointer transition-colors ${
+                        selectedAvatar === null
+                          ? 'bg-green-ecco/20 border-2 border-green-ecco'
+                          : 'bg-gray-800 border-2 border-gray-700 hover:border-gray-600'
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        {user?.imageUrl ? (
+                          <img
+                            src={user.imageUrl}
+                            alt="Account Avatar"
+                            className="w-16 h-16 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-full bg-green-ecco flex items-center justify-center">
+                            <span className="text-black text-2xl font-bold">
+                              {user?.firstName?.[0] || 'U'}
+                            </span>
+                          </div>
+                        )}
+                        <div>
+                          <div className="font-semibold text-white">Use Account Avatar</div>
+                          <div className="text-sm text-gray-400">Your profile picture from your account</div>
+                        </div>
+                        {selectedAvatar === null && (
+                          <CheckCircle2 className="w-6 h-6 text-green-ecco ml-auto" />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Random Avatars Grid */}
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-white">Choose Your Avatar</h3>
+                        <button
+                          onClick={handleRefreshAvatars}
+                          disabled={loadingAvatars}
+                          className="px-3 py-1.5 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        >
+                          <span>🔄</span>
+                          {loadingAvatars ? 'Loading...' : 'Refresh'}
+                        </button>
+                      </div>
+                      {loadingAvatars && availableAvatars.length === 0 ? (
+                        <div className="text-center py-8">
+                          <div className="text-green-ecco">Loading avatars...</div>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
+                          {availableAvatars.map((avatar) => (
+                            <button
+                              key={avatar.id}
+                              onClick={() => setSelectedAvatar(avatar.id)}
+                              className={`aspect-square rounded-lg flex items-center justify-center transition-all overflow-hidden ${
+                                selectedAvatar === avatar.id
+                                  ? 'bg-green-ecco/30 border-2 border-green-ecco scale-110'
+                                  : 'bg-gray-800 border-2 border-gray-700 hover:border-gray-600 hover:scale-105'
+                              }`}
+                              title={avatar.name}
+                            >
+                              <img
+                                src={avatar.thumbnail}
+                                alt={avatar.name}
+                                className="w-full h-full object-cover"
+                              />
+                              {selectedAvatar === avatar.id && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-green-ecco/20">
+                                  <CheckCircle2 className="w-6 h-6 text-green-ecco" />
+                                </div>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Preview */}
+                    {selectedAvatar !== null && availableAvatars.length > 0 && (
+                      <div className="p-4 bg-gray-800 rounded-lg">
+                        <div className="text-sm text-gray-400 mb-2">Preview:</div>
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={availableAvatars.find(a => a.id === selectedAvatar)?.url}
+                            alt="Selected Avatar"
+                            className="w-16 h-16 rounded-full object-cover border-2 border-green-ecco"
+                          />
+                          <div>
+                            <div className="font-semibold text-white">
+                              {availableAvatars.find(a => a.id === selectedAvatar)?.name}
+                            </div>
+                            <div className="text-sm text-gray-400">This will be your avatar</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
+                      <button
+                        onClick={handleSaveAvatarPreference}
+                        className="flex-1 px-6 py-3 bg-green-ecco text-black rounded-lg hover:bg-green-400 transition-colors font-semibold flex items-center justify-center gap-2"
+                      >
+                        <Save className="w-5 h-5" />
+                        Save Avatar
+                      </button>
+                      <button
+                        onClick={() => setShowAvatarPicker(false)}
+                        className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </DashboardLayout>
   );

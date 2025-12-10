@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useUser, SignOutButton } from '@clerk/clerk-react';
 import { motion } from 'framer-motion';
+import { useUserDisplay } from '../../hooks/useUserDisplay';
 import {
   LayoutDashboard,
   BookOpen,
@@ -17,7 +18,8 @@ import {
   PlayCircle,
   TrendingUp,
   Calendar,
-  BookmarkCheck
+  BookmarkCheck,
+  MessageSquare
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -28,6 +30,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { user } = useUser();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { displayName, displayAvatar } = useUserDisplay();
 
   const menuSections = [
     {
@@ -38,6 +41,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         { icon: PlayCircle, label: 'Continue Learning', path: '/dashboard/continue' },
         { icon: Search, label: 'Browse Courses', path: '/courses' },
         { icon: BookmarkCheck, label: 'Bookmarks', path: '/dashboard/bookmarks' },
+        { icon: MessageSquare, label: 'Community Forum', path: '/dashboard/community' },
       ]
     },
     {
@@ -162,22 +166,18 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         {/* User Section */}
         <div className="p-4 border-t border-gray-800 flex-shrink-0">
           <div className="flex items-center gap-3 mb-4 p-3 rounded-lg bg-gray-800/50">
-            {user?.imageUrl ? (
-              <img
-                src={user.imageUrl}
-                alt={user.firstName || 'User'}
-                className="w-10 h-10 rounded-full"
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-green-ecco flex items-center justify-center">
-                <span className="text-black font-bold">
-                  {user?.firstName?.[0] || 'U'}
-                </span>
-              </div>
-            )}
+            <img
+              src={displayAvatar.value}
+              alt={displayName}
+              className="w-10 h-10 rounded-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id || 'User'}`;
+              }}
+            />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold truncate">
-                {user?.firstName || 'User'} {user?.lastName}
+                {displayName}
               </p>
               <p className="text-xs text-gray-400 truncate">
                 {user?.primaryEmailAddress?.emailAddress}

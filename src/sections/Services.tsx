@@ -244,12 +244,18 @@ export default function Services() {
           }}
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
-          onClick={() => navigate('/courses')}
+          onClick={() => {
+            if (user) {
+              navigate('/dashboard/community');
+            } else {
+              navigate('/sign-in');
+            }
+          }}
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold">Community Forum</h3>
             <span className="text-green-ecco hover:text-green-300 text-sm font-semibold">
-              Coming Soon →
+              Join Now →
             </span>
           </div>
           <p>Join our community to discuss, share, and collaborate on sustainable living practices.</p>

@@ -13,6 +13,9 @@ import Bookmarks from './pages/Bookmarks';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import BlogPostDetail from './pages/BlogPostDetail';
+import CommunityForum from './pages/CommunityForum';
+import PostDetail from './pages/PostDetail';
+import NewPost from './pages/NewPost';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -52,6 +55,9 @@ const App = () => {
                 <Route path="/bookmarks" element={<Bookmarks />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/community" element={<CommunityForum />} />
+                <Route path="/community/new" element={<NewPost />} />
+                <Route path="/community/posts/:postId" element={<PostDetail />} />
               </Routes>
             </ProtectedRoute>
           }
