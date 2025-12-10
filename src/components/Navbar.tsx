@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { SignedOut, SignInButton } from "@clerk/clerk-react";
+import { SignedOut, SignedIn, SignInButton, UserButton } from "@clerk/clerk-react";
 import { motion } from "framer-motion";
 
 function useScrollToTop() {
@@ -95,6 +95,23 @@ const Navbar = () => {
               </a>
             </Link>
           </li>
+
+          <SignedIn>
+            <li>
+              <Link to="/courses">
+                <a className={`font-semibold ${isActiveRoute("/courses") ? "text-green-ecco" : "text-white"}`}>
+                  Courses
+                </a>
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard">
+                <a className={`font-semibold ${isActiveRoute("/dashboard") ? "text-green-ecco" : "text-white"}`}>
+                  Dashboard
+                </a>
+              </Link>
+            </li>
+          </SignedIn>
         </ul>
       </div>
 
@@ -133,6 +150,23 @@ const Navbar = () => {
                 </a>
               </Link>
             </li>
+
+            <SignedIn>
+              <li>
+                <Link to="/courses">
+                  <a className={`font-semibold ${isActiveRoute("/courses") ? "text-green-ecco" : "text-white"}`}>
+                    Courses
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard">
+                  <a className={`font-semibold ${isActiveRoute("/dashboard") ? "text-green-ecco" : "text-white"}`}>
+                    Dashboard
+                  </a>
+                </Link>
+              </li>
+            </SignedIn>
           </ul>
         </div>
       )}
@@ -148,6 +182,15 @@ const Navbar = () => {
             </motion.button>
           </SignInButton>
         </SignedOut>
+        <SignedIn>
+          <UserButton 
+            appearance={{
+              elements: {
+                avatarBox: "w-10 h-10"
+              }
+            }}
+          />
+        </SignedIn>
       </div>
     </div>
   );
