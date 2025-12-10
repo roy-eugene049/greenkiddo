@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import CourseCatalog from './pages/CourseCatalog';
 import CourseDetail from './pages/CourseDetail';
 import LessonView from './pages/LessonView';
+import QuizView from './pages/QuizView';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -55,6 +56,24 @@ const App = () => {
           element={
             <ProtectedRoute>
               <LessonView />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Quiz View (Protected, uses DashboardLayout) */}
+        <Route
+          path="/courses/:courseId/lessons/:lessonId/quiz"
+          element={
+            <ProtectedRoute>
+              <QuizView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/courses/:courseId/lessons/:lessonId/quiz/:quizId"
+          element={
+            <ProtectedRoute>
+              <QuizView />
             </ProtectedRoute>
           }
         />
