@@ -1,4 +1,10 @@
 import { motion } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
+import { useState, useEffect } from 'react';
+import { CourseCard } from '../components/course/CourseCard';
+import { CourseService } from '../services/courseService';
+import { Course } from '../types/course';
 
 const elcImg = "https://images.unsplash.com/photo-1579567761406-4684ee0c75b6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzJ8fHRlY2h8ZW58MHwxfDB8fHww";
 const asImg = "https://images.unsplash.com/photo-1555448248-2571daf6344b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFic3RyYWN0fGVufDB8MXwwfHx8MA%3D%3D";
@@ -25,6 +31,35 @@ const itemVariants = {
 };
 
 export default function Services() {
+  const navigate = useNavigate();
+  const { isSignedIn } = useUser();
+  const [featuredCourses, setFeaturedCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    const loadFeaturedCourses = async () => {
+      try {
+        const allCourses = await CourseService.getAllCourses();
+        // Get first 3 courses as featured
+        setFeaturedCourses(allCourses.slice(0, 3));
+      } catch (error) {
+        console.error('Error loading featured courses:', error);
+      }
+    };
+    loadFeaturedCourses();
+  }, []);
+
+  const handleDashboardClick = () => {
+    if (isSignedIn) {
+      navigate('/dashboard');
+    } else {
+      navigate('/sign-in');
+    }
+  };
+
+  const handleEnroll = (courseId: string) => {
+    navigate(`/courses/${courseId}`);
+  };
+
   return (
     <motion.div 
       className="min-h-screen bg-black text-white flex flex-col items-center py-12 m-4"
@@ -55,7 +90,7 @@ export default function Services() {
       >
         {/* Learning Dashboard */}
         <motion.div 
-          className="col-span-1 md:col-span-2 p-6 rounded-lg"
+          className="col-span-1 md:col-span-2 p-6 rounded-lg cursor-pointer"
           style={{
             background: 'black', 
             backdropFilter: 'blur(40px)',
@@ -63,8 +98,18 @@ export default function Services() {
           }}
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
+          onClick={handleDashboardClick}
         >
-          <h3 className="text-xl font-bold mb-4">Learning Dashboard</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold">Learning Dashboard</h3>
+            <Link
+              to={isSignedIn ? '/dashboard' : '/sign-in'}
+              className="text-green-ecco hover:text-green-300 text-sm font-semibold"
+              onClick={(e) => e.stopPropagation()}
+            >
+              View Dashboard →
+            </Link>
+          </div>
           <p className="mb-4">Access a variety of courses and track your progress towards becoming a sustainability expert.</p>
           <motion.div 
             className="p-4 rounded-md space-y-4"
@@ -99,22 +144,27 @@ export default function Services() {
         </motion.div>
 
         {/* Expert-Led Content */}
-        <motion.div 
-          className="row-span-2 p-6 rounded-lg flex flex-col"
-          style={{
-            background: 'black',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid #333333'
-          }}
-          variants={itemVariants}
-          whileHover={{ scale: 1.02 }}
-        >
-          <h3 className="text-xl font-bold mb-4">Expert-Led Content</h3>
-          <p>Learn from the best in the field with content created by sustainability experts and thought leaders.</p>
-          <motion.div className="mt-4 flex-grow" whileHover={{ scale: 1.03 }}>
-            <img src={elcImg} alt="Expert Content" className="w-full h-full object-cover rounded-lg" loading="lazy" />
+        <Link to="/courses" className="row-span-2">
+          <motion.div 
+            className="p-6 rounded-lg flex flex-col h-full cursor-pointer"
+            style={{
+              background: 'black',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid #333333'
+            }}
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold">Expert-Led Content</h3>
+              <span className="text-green-ecco text-sm font-semibold">Browse →</span>
+            </div>
+            <p>Learn from the best in the field with content created by sustainability experts and thought leaders.</p>
+            <motion.div className="mt-4 flex-grow" whileHover={{ scale: 1.03 }}>
+              <img src={elcImg} alt="Expert Content" className="w-full h-full object-cover rounded-lg" loading="lazy" />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </Link>
 
         {/* Affordable Subscription */}
         <motion.div 
@@ -127,30 +177,36 @@ export default function Services() {
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
         >
-          <h3 className="text-xl font-bold mb-4">Affordable Subscription</h3>
-          <p>Access all courses and resources with a simple, fixed monthly fee. No hidden charges.</p>
-          <motion.div className="mt-4 flex-grow" whileHover={{ scale: 1.03 }}>
-            <img src={asImg} alt="Subscription" className="w-full h-full object-cover rounded-lg max-h-60" loading="lazy" />
-          </motion.div>
+          <h3 className="text-xl font-bold mb-4">Free Access</h3>
+          <p>Access all courses and resources completely free. No hidden charges, no subscriptions required.</p>
+          <div className="mt-4 p-4 bg-green-ecco/10 rounded-lg border border-green-ecco/30">
+            <div className="text-3xl font-bold text-green-ecco mb-1">$0</div>
+            <div className="text-sm text-gray-400">Forever Free</div>
+          </div>
         </motion.div>
 
         {/* Your Journey, Your Way */}
-        <motion.div 
-          className="p-6 rounded-lg flex flex-col max-h-90"
-          style={{
-            background: 'black',
-            backdropFilter: 'blur(50px)',
-            border: '1px solid #333333'
-          }}
-          variants={itemVariants}
-          whileHover={{ scale: 1.02 }}
-        >
-          <h3 className="text-xl font-bold mb-4">Your Journey, Your Way</h3>
-          <p>Customize your learning experience and explore vast topics that matter most to you at the comfort of your home.</p>
-          <motion.div className="mt-4 flex-grow" whileHover={{ scale: 1.03 }}>
-            <img src={yjywImg} alt="Customized Journey" className="w-full h-full object-cover rounded-lg max-h-60" loading="lazy" />
+        <Link to="/courses">
+          <motion.div 
+            className="p-6 rounded-lg flex flex-col max-h-90 cursor-pointer"
+            style={{
+              background: 'black',
+              backdropFilter: 'blur(50px)',
+              border: '1px solid #333333'
+            }}
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold">Your Journey, Your Way</h3>
+              <span className="text-green-ecco text-sm font-semibold">Explore →</span>
+            </div>
+            <p>Customize your learning experience and explore vast topics that matter most to you at the comfort of your home.</p>
+            <motion.div className="mt-4 flex-grow" whileHover={{ scale: 1.03 }}>
+              <img src={yjywImg} alt="Customized Journey" className="w-full h-full object-cover rounded-lg max-h-60" loading="lazy" />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </Link>
 
         {/* Flexible Learning */}
         <motion.div 
@@ -181,7 +237,7 @@ export default function Services() {
 
         {/* Community Forum */}
         <motion.div 
-          className="p-6 rounded-lg"
+          className="p-6 rounded-lg cursor-pointer"
           style={{
             background: 'black',
             backdropFilter: 'blur(20px)',
@@ -189,11 +245,64 @@ export default function Services() {
           }}
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
+          onClick={() => navigate('/courses')}
         >
-          <h3 className="text-xl font-bold mb-4">Community Forum</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold">Community Forum</h3>
+            <span className="text-green-ecco hover:text-green-300 text-sm font-semibold">
+              Coming Soon →
+            </span>
+          </div>
           <p>Join our community to discuss, share, and collaborate on sustainable living practices.</p>
         </motion.div>
       </motion.div>
+
+      {/* Featured Courses Section */}
+      {featuredCourses.length > 0 && (
+        <motion.div 
+          className="w-full max-w-6xl mt-16"
+          variants={itemVariants}
+        >
+          <div className="text-center mb-8">
+            <motion.span 
+              className="bg-[#32CD32] text-black rounded-full px-4 py-1 mb-2 inline-block text-sm"
+              whileHover={{ scale: 1.05 }}
+            >
+              Featured Courses
+            </motion.span>
+            <motion.h2 className="text-3xl font-bold mt-4" variants={itemVariants}>
+              Start Your <span className="text-[#32CD32]">Sustainability Journey</span>
+            </motion.h2>
+            <motion.p className="mt-4 text-lg text-gray-400" variants={itemVariants}>
+              Explore our most popular courses and begin learning today
+            </motion.p>
+          </div>
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={containerVariants}
+          >
+            {featuredCourses.map((course, index) => (
+              <motion.div
+                key={course.id}
+                variants={itemVariants}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <CourseCard course={course} onEnroll={handleEnroll} />
+              </motion.div>
+            ))}
+          </motion.div>
+          <motion.div className="text-center mt-8" variants={itemVariants}>
+            <Link
+              to="/courses"
+              className="inline-block bg-green-ecco text-black font-bold py-3 px-8 rounded-full hover:bg-green-300 transition-colors"
+            >
+              View All Courses →
+            </Link>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
