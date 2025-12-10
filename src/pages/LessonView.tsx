@@ -15,8 +15,11 @@ import {
   FileText,
   PlayCircle,
   Clock,
-  CheckCircle2
+  CheckCircle2,
+  Bookmark,
+  BookmarkCheck
 } from 'lucide-react';
+import NotesPanel from '../components/lesson/NotesPanel';
 
 const LessonView = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
@@ -27,8 +30,10 @@ const LessonView = () => {
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
+  const [bookmarkedLessons, setBookmarkedLessons] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [notesOpen, setNotesOpen] = useState(false);
 
   useEffect(() => {
     const loadLessonData = async () => {
@@ -54,11 +59,17 @@ const LessonView = () => {
           setCurrentLessonIndex(index);
         }
 
-        // Load completed lessons (mock - would come from backend)
+        // Load completed lessons and bookmarks (mock - would come from backend)
         if (user) {
           const progress = await CourseService.getUserProgress(user.id, courseId);
           if (progress?.completed) {
             // In real app, would load all completed lessons
+          }
+          
+          // Load bookmarks from localStorage
+          const savedBookmarks = localStorage.getItem(`bookmarks-${user.id}`);
+          if (savedBookmarks) {
+            setBookmarkedLessons(new Set(JSON.parse(savedBookmarks)));
           }
         }
       } catch (error) {
@@ -105,6 +116,28 @@ const LessonView = () => {
 
   const isLessonCompleted = (lessonId: string) => {
     return completedLessons.has(lessonId);
+  };
+
+  const isLessonBookmarked = (lessonIdToCheck: string) => {
+    return bookmarkedLessons.has(lessonIdToCheck) || 
+           (courseId && bookmarkedLessons.has(`${courseId}:${lessonIdToCheck}`));
+  };
+
+  const handleToggleBookmark = () => {
+    if (!user || !lessonId || !courseId) return;
+
+    const bookmarkKey = `${courseId}:${lessonId}`;
+    const newBookmarks = new Set(bookmarkedLessons);
+    if (newBookmarks.has(bookmarkKey) || newBookmarks.has(lessonId)) {
+      newBookmarks.delete(bookmarkKey);
+      newBookmarks.delete(lessonId);
+    } else {
+      newBookmarks.add(bookmarkKey);
+    }
+    setBookmarkedLessons(newBookmarks);
+    
+    // Save to localStorage
+    localStorage.setItem(`bookmarks-${user.id}`, JSON.stringify(Array.from(newBookmarks)));
   };
 
   const formatDuration = (minutes: number) => {
@@ -235,6 +268,9 @@ const LessonView = () => {
                           <span className={`text-sm font-medium ${isActive ? 'text-green-ecco' : ''}`}>
                             {lesson.title}
                           </span>
+                          {isLessonBookmarked(lesson.id) && (
+                            <BookmarkCheck className="w-4 h-4 text-green-ecco flex-shrink-0" />
+                          )}
                         </div>
                         <div className="flex items-center gap-2 mt-1">
                           <Clock className="w-3 h-3 text-gray-500" />
@@ -299,6 +335,31 @@ const LessonView = () => {
                   <span className="text-sm text-gray-400">
                     Lesson {currentLessonIndex + 1} of {lessons.length}
                   </span>
+                  <button
+                    onClick={handleToggleBookmark}
+                    className={`
+                      p-2 rounded-lg transition-colors
+                      ${
+                        isLessonBookmarked(lessonId!)
+                          ? 'text-green-ecco hover:bg-green-ecco/20'
+                          : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                      }
+                    `}
+                    title={isLessonBookmarked(lessonId!) ? 'Remove bookmark' : 'Bookmark lesson'}
+                  >
+                    {isLessonBookmarked(lessonId!) ? (
+                      <BookmarkCheck className="w-5 h-5" />
+                    ) : (
+                      <Bookmark className="w-5 h-5" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setNotesOpen(true)}
+                    className="p-2 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
+                    title="Open notes"
+                  >
+                    <FileText className="w-5 h-5" />
+                  </button>
                   <button
                     onClick={handleMarkComplete}
                     disabled={isLessonCompleted(lessonId!)}
@@ -489,6 +550,16 @@ const LessonView = () => {
             </div>
           </div>
         </div>
+
+        {/* Notes Panel */}
+        {user && (
+          <NotesPanel
+            lessonId={lessonId || ''}
+            isOpen={notesOpen}
+            onClose={() => setNotesOpen(false)}
+            userId={user.id}
+          />
+        )}
       </div>
     </DashboardLayout>
   );

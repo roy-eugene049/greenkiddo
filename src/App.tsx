@@ -9,6 +9,7 @@ import LessonView from './pages/LessonView';
 import QuizView from './pages/QuizView';
 import Certificates from './pages/Certificates';
 import Achievements from './pages/Achievements';
+import Bookmarks from './pages/Bookmarks';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -45,6 +46,7 @@ const App = () => {
                 <Route path="/courses" element={<Dashboard />} />
                 <Route path="/certificates" element={<Certificates />} />
                 <Route path="/achievements" element={<Achievements />} />
+                <Route path="/bookmarks" element={<Bookmarks />} />
                 <Route path="/profile" element={<div className="p-8"><h1>Profile</h1></div>} />
                 <Route path="/settings" element={<div className="p-8"><h1>Settings</h1></div>} />
               </Routes>

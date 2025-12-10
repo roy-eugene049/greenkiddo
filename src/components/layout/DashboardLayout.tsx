@@ -16,7 +16,8 @@ import {
   LogOut,
   PlayCircle,
   TrendingUp,
-  Calendar
+  Calendar,
+  BookmarkCheck
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -36,6 +37,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         { icon: BookOpen, label: 'My Courses', path: '/dashboard/courses' },
         { icon: PlayCircle, label: 'Continue Learning', path: '/dashboard/continue' },
         { icon: Search, label: 'Browse Courses', path: '/courses' },
+        { icon: BookmarkCheck, label: 'Bookmarks', path: '/dashboard/bookmarks' },
       ]
     },
     {
