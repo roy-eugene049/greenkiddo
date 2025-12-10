@@ -190,7 +190,7 @@ const CourseDetail = () => {
                             Preview
                           </span>
                         )}
-                        {isEnrolled ? (
+                        {isEnrolled || lesson.isPreview ? (
                           <Link
                             to={`/courses/${courseId}/lessons/${lesson.id}`}
                             className="text-green-ecco hover:text-green-300"

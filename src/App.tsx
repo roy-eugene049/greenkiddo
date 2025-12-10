@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import CourseCatalog from './pages/CourseCatalog';
 import CourseDetail from './pages/CourseDetail';
+import LessonView from './pages/LessonView';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -48,6 +49,16 @@ const App = () => {
           }
         />
         
+        {/* Lesson View (Protected, uses DashboardLayout) */}
+        <Route
+          path="/courses/:courseId/lessons/:lessonId"
+          element={
+            <ProtectedRoute>
+              <LessonView />
+            </ProtectedRoute>
+          }
+        />
+        
         {/* Public Routes (With Navbar/Footer) */}
         <Route
           path="/*"
@@ -62,6 +73,7 @@ const App = () => {
                 <Route path='/services' element={<Services />} />
                 <Route path='/courses' element={<CourseCatalog />} />
                 <Route path='/courses/:courseId' element={<CourseDetail />} />
+                <Route path='/courses/:courseId/lessons/:lessonId' element={<LessonView />} />
                 <Route path='/comingsoon' element={<ComingSoon />} />
                 <Route
                   path="/comingsoon"

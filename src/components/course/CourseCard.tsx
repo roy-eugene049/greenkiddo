@@ -130,7 +130,7 @@ export const CourseCard = ({
         <div className="flex gap-2">
           {showProgress ? (
             <Link
-              to={`/courses/${course.id}/lessons`}
+              to={`/courses/${course.id}`}
               className="flex-1 bg-green-ecco text-black font-bold py-2 px-4 rounded-full text-center hover:bg-green-300 transition-colors"
             >
               Continue Learning
