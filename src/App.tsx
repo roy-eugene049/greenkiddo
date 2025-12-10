@@ -12,6 +12,7 @@ import Achievements from './pages/Achievements';
 import Bookmarks from './pages/Bookmarks';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import BlogPostDetail from './pages/BlogPostDetail';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -99,6 +100,7 @@ const App = () => {
                 <Route path='/courses' element={<CourseCatalog />} />
                 <Route path='/courses/:courseId' element={<CourseDetail />} />
                 <Route path='/courses/:courseId/lessons/:lessonId' element={<LessonView />} />
+                <Route path='/blog/:slug' element={<BlogPostDetail />} />
                 <Route path='/comingsoon' element={<ComingSoon />} />
                 <Route
                   path="/comingsoon"
