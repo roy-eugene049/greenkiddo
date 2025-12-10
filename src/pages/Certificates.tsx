@@ -46,7 +46,7 @@ const Certificates = () => {
     });
   };
 
-  const handleDownload = (certificate: Certificate) => {
+  const handleDownload = () => {
     // In real app, this would download the PDF
     // For now, we'll create a simple certificate display
     window.print();
@@ -127,7 +127,7 @@ const Certificates = () => {
                     <span className="text-sm text-green-ecco font-semibold">Verified</span>
                   </div>
                   <button
-                    onClick={() => handleDownload(certificate)}
+                    onClick={handleDownload}
                     className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-ecco text-black font-bold rounded-lg hover:bg-green-300 transition-colors"
                   >
                     <Download className="w-5 h-5" />

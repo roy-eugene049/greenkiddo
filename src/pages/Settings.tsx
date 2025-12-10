@@ -9,7 +9,6 @@ import {
   Shield,
   Mail,
   Moon,
-  Globe,
   Save,
   Check
 } from 'lucide-react';

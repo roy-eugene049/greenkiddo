@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { Badge } from '../types/course';
-import { Award, Trophy, Star, Flame, Target, Lock, CheckCircle2 } from 'lucide-react';
+import { Award, Trophy, Star, Lock, CheckCircle2 } from 'lucide-react';
 import { mockBadges } from '../services/mockData';
 
 const Achievements = () => {

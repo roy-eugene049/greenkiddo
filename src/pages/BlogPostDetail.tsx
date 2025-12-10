@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BlogService } from '../services/blogService';
 import { BlogPost } from '../types/blog';
-import { ArrowLeft, Clock, Eye, Heart, Calendar, Tag } from 'lucide-react';
+import { ArrowLeft, Clock, Eye, Heart, Tag } from 'lucide-react';
 
 const BlogPostDetail = () => {
   const { slug } = useParams<{ slug: string }>();

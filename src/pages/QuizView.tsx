@@ -152,10 +152,6 @@ const QuizView = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const currentQuestion = quiz?.questions[currentQuestionIndex];
-  const progress = quiz ? ((currentQuestionIndex + 1) / quiz.questions.length) * 100 : 0;
-  const allAnswered = quiz?.questions.every((q) => answers[q.id] !== undefined) || false;
-
   if (loading) {
     return (
       <DashboardLayout>
@@ -165,6 +161,22 @@ const QuizView = () => {
       </DashboardLayout>
     );
   }
+
+  const currentQuestion = quiz?.questions[currentQuestionIndex];
+  const progress = quiz ? ((currentQuestionIndex + 1) / quiz.questions.length) * 100 : 0;
+
+  // Early return if no quiz or current question
+  if (!quiz || !currentQuestion) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-full">
+          <div className="text-white text-xl">Quiz not found</div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const allAnswered = quiz.questions.every((q) => answers[q.id] !== undefined);
 
   if (!quiz) {
     return (
@@ -433,100 +445,102 @@ const QuizView = () => {
         </div>
 
         {/* Question Card */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQuestionIndex}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="bg-gray-900 border border-gray-800 rounded-lg p-6 md:p-8 mb-6"
-          >
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="px-3 py-1 bg-green-ecco/20 text-green-ecco rounded-full text-sm font-semibold">
-                  {currentQuestion.type === 'multiple-choice' && 'Multiple Choice'}
-                  {currentQuestion.type === 'true-false' && 'True/False'}
-                  {currentQuestion.type === 'fill-blank' && 'Fill in the Blank'}
-                  {currentQuestion.type === 'short-answer' && 'Short Answer'}
-                </span>
-                <span className="text-sm text-gray-400">
-                  {currentQuestion.points} {currentQuestion.points === 1 ? 'point' : 'points'}
-                </span>
+        {currentQuestion && (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentQuestionIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="bg-gray-900 border border-gray-800 rounded-lg p-6 md:p-8 mb-6"
+            >
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="px-3 py-1 bg-green-ecco/20 text-green-ecco rounded-full text-sm font-semibold">
+                    {currentQuestion.type === 'multiple-choice' && 'Multiple Choice'}
+                    {currentQuestion.type === 'true-false' && 'True/False'}
+                    {currentQuestion.type === 'fill-blank' && 'Fill in the Blank'}
+                    {currentQuestion.type === 'short-answer' && 'Short Answer'}
+                  </span>
+                  <span className="text-sm text-gray-400">
+                    {currentQuestion.points} {currentQuestion.points === 1 ? 'point' : 'points'}
+                  </span>
+                </div>
+                <h2 className="text-2xl font-bold mb-6">{currentQuestion.question}</h2>
               </div>
-              <h2 className="text-2xl font-bold mb-6">{currentQuestion.question}</h2>
-            </div>
 
-            {/* Multiple Choice */}
-            {currentQuestion.type === 'multiple-choice' && currentQuestion.options && (
-              <div className="space-y-3">
-                {currentQuestion.options.map((option) => (
-                  <label
-                    key={option}
-                    className={`
-                      flex items-center gap-3 p-4 rounded-lg border cursor-pointer
-                      transition-all
-                      ${
-                        answers[currentQuestion.id] === option
-                          ? 'border-green-ecco bg-green-ecco/20'
-                          : 'border-gray-700 hover:border-gray-600 bg-gray-800'
-                      }
-                    `}
-                  >
-                    <input
-                      type="radio"
-                      name={`question-${currentQuestion.id}`}
-                      value={option}
-                      checked={answers[currentQuestion.id] === option}
-                      onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-                      className="w-5 h-5 text-green-ecco"
-                    />
-                    <span className="flex-1">{option}</span>
-                  </label>
-                ))}
-              </div>
-            )}
+              {/* Multiple Choice */}
+              {currentQuestion.type === 'multiple-choice' && currentQuestion.options && (
+                <div className="space-y-3">
+                  {currentQuestion.options.map((option) => (
+                    <label
+                      key={option}
+                      className={`
+                        flex items-center gap-3 p-4 rounded-lg border cursor-pointer
+                        transition-all
+                        ${
+                          answers[currentQuestion.id] === option
+                            ? 'border-green-ecco bg-green-ecco/20'
+                            : 'border-gray-700 hover:border-gray-600 bg-gray-800'
+                        }
+                      `}
+                    >
+                      <input
+                        type="radio"
+                        name={`question-${currentQuestion.id}`}
+                        value={option}
+                        checked={answers[currentQuestion.id] === option}
+                        onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                        className="w-5 h-5 text-green-ecco"
+                      />
+                      <span className="flex-1">{option}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
 
-            {/* True/False */}
-            {currentQuestion.type === 'true-false' && (
-              <div className="space-y-3">
-                {['true', 'false'].map((option) => (
-                  <label
-                    key={option}
-                    className={`
-                      flex items-center gap-3 p-4 rounded-lg border cursor-pointer
-                      transition-all
-                      ${
-                        answers[currentQuestion.id] === option
-                          ? 'border-green-ecco bg-green-ecco/20'
-                          : 'border-gray-700 hover:border-gray-600 bg-gray-800'
-                      }
-                    `}
-                  >
-                    <input
-                      type="radio"
-                      name={`question-${currentQuestion.id}`}
-                      value={option}
-                      checked={answers[currentQuestion.id] === option}
-                      onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-                      className="w-5 h-5 text-green-ecco"
-                    />
-                    <span className="flex-1 capitalize font-semibold">{option}</span>
-                  </label>
-                ))}
-              </div>
-            )}
+              {/* True/False */}
+              {currentQuestion.type === 'true-false' && (
+                <div className="space-y-3">
+                  {['true', 'false'].map((option) => (
+                    <label
+                      key={option}
+                      className={`
+                        flex items-center gap-3 p-4 rounded-lg border cursor-pointer
+                        transition-all
+                        ${
+                          answers[currentQuestion.id] === option
+                            ? 'border-green-ecco bg-green-ecco/20'
+                            : 'border-gray-700 hover:border-gray-600 bg-gray-800'
+                        }
+                      `}
+                    >
+                      <input
+                        type="radio"
+                        name={`question-${currentQuestion.id}`}
+                        value={option}
+                        checked={answers[currentQuestion.id] === option}
+                        onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                        className="w-5 h-5 text-green-ecco"
+                      />
+                      <span className="flex-1 capitalize font-semibold">{option}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
 
-            {/* Fill in the Blank / Short Answer */}
-            {(currentQuestion.type === 'fill-blank' || currentQuestion.type === 'short-answer') && (
-              <textarea
-                value={(answers[currentQuestion.id] as string) || ''}
-                onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-                placeholder="Type your answer here..."
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:border-green-ecco min-h-32"
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
+              {/* Fill in the Blank / Short Answer */}
+              {(currentQuestion.type === 'fill-blank' || currentQuestion.type === 'short-answer') && (
+                <textarea
+                  value={(answers[currentQuestion.id] as string) || ''}
+                  onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                  placeholder="Type your answer here..."
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:border-green-ecco min-h-32"
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
+        )}
 
         {/* Navigation */}
         <div className="flex items-center justify-between">

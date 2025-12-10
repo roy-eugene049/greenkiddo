@@ -6,11 +6,9 @@ import DashboardLayout from '../components/layout/DashboardLayout';
 import { CourseService } from '../services/courseService';
 import { Course, Certificate, Badge } from '../types/course';
 import {
-  User,
   Mail,
   Calendar,
   BookOpen,
-  Award,
   Clock,
   TrendingUp,
   GraduationCap,
@@ -23,7 +21,6 @@ import { mockBadges } from '../services/mockData';
 const Profile = () => {
   const { user } = useUser();
   const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
-  const [completedCourses, setCompletedCourses] = useState<Course[]>([]);
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [badges, setBadges] = useState<Badge[]>([]);
   const [earnedBadges, setEarnedBadges] = useState<Set<string>>(new Set());
@@ -50,7 +47,6 @@ const Profile = () => {
         const allCourses = await CourseService.getAllCourses();
         const enrolled = allCourses.slice(0, 2); // Mock enrolled courses
         setEnrolledCourses(enrolled);
-        setCompletedCourses([]); // Mock - no completed courses yet
 
         // Load certificates (mock)
         const mockCertificates: Certificate[] = [];
@@ -146,7 +142,7 @@ const Profile = () => {
                     {user?.firstName || 'User'} {user?.lastName}
                   </h1>
                   {user?.hasVerifiedEmailAddress && (
-                    <CheckCircle2 className="w-6 h-6 text-green-ecco" title="Verified" />
+                    <CheckCircle2 className="w-6 h-6 text-green-ecco" />
                   )}
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-gray-400 mb-4">
