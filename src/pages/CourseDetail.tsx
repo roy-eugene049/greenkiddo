@@ -8,11 +8,8 @@ import {
   Clock, 
   Users, 
   Star, 
-  BookOpen, 
-  CheckCircle, 
   PlayCircle,
-  ArrowRight,
-  User
+  ArrowRight
 } from 'lucide-react';
 
 const CourseDetail = () => {

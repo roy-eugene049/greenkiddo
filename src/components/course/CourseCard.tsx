@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Course } from '../../types/course';
-import { Clock, Users, Star, BookOpen } from 'lucide-react';
+import { Clock, Users, Star } from 'lucide-react';
 
 interface CourseCardProps {
   course: Course;

@@ -53,7 +53,7 @@ const Contact = () => {
     resolver: zodResolver(contactSchema),
   });
 
-  const onSubmit = async (data: ContactFormData) => {
+  const onSubmit = async (_data: ContactFormData) => {
     setSubmitting(true);
     setSubmitStatus('idle');
     setSubmitMessage('');

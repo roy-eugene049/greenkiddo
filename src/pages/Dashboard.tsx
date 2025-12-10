@@ -6,7 +6,7 @@ import DashboardLayout from '../components/layout/DashboardLayout';
 import { CourseCard } from '../components/course/CourseCard';
 import { CourseService } from '../services/courseService';
 import { Course, UserProgress } from '../types/course';
-import { BookOpen, Award, Clock, TrendingUp, ArrowRight, PlayCircle } from 'lucide-react';
+import { BookOpen, Award, Clock, TrendingUp, ArrowRight } from 'lucide-react';
 
 const Dashboard = () => {
   const { user, isLoaded } = useUser();

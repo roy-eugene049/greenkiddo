@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { CourseService } from '../services/courseService';
-import { Quiz, Question } from '../types/course';
+import { Quiz } from '../types/course';
 import {
   CheckCircle2,
   XCircle,
@@ -28,7 +28,6 @@ type QuestionResult = {
 
 const QuizView = () => {
   const { courseId, lessonId, quizId } = useParams<{ courseId: string; lessonId: string; quizId?: string }>();
-  const navigate = useNavigate();
   const { user } = useUser();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

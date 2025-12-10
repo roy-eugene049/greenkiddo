@@ -1,4 +1,4 @@
-import { Course, Lesson, Quiz, UserProfile, Badge } from '../types/course';
+import { Course, Lesson, Quiz, Badge } from '../types/course';
 
 // Mock Courses Data
 export const mockCourses: Course[] = [

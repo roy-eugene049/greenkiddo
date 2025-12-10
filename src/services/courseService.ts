@@ -2,12 +2,10 @@ import { Course, Lesson, Quiz, UserProgress } from '../types/course';
 import { 
   mockCourses, 
   mockLessons, 
-  mockQuizzes,
   getCourseById,
   getLessonsByCourseId,
   getQuizById,
   getCoursesByCategory,
-  getCoursesByDifficulty,
   searchCourses
 } from './mockData';
 
@@ -103,7 +101,7 @@ export class CourseService {
     userId: string,
     courseId: string,
     lessonId: string,
-    completed: boolean
+    _completed: boolean
   ): Promise<boolean> {
     await new Promise(resolve => setTimeout(resolve, 300));
     console.log(`Progress updated for user ${userId}, course ${courseId}, lesson ${lessonId}`);
@@ -112,7 +110,7 @@ export class CourseService {
 
   // Submit quiz
   static async submitQuiz(
-    userId: string,
+    _userId: string,
     quizId: string,
     answers: Record<string, string | string[]>
   ): Promise<{

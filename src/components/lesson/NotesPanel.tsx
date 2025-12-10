@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Note } from '../../types/course';
-import { FileText, X, Save, Trash2, Plus } from 'lucide-react';
+import { FileText, X, Save, Trash2 } from 'lucide-react';
 
 interface NotesPanelProps {
   lessonId: string;
