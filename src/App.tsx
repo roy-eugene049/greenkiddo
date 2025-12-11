@@ -17,6 +17,8 @@ import CommunityForum from './pages/CommunityForum';
 import PostDetail from './pages/PostDetail';
 import NewPost from './pages/NewPost';
 import SearchResults from './pages/SearchResults';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import CourseManagement from './pages/admin/CourseManagement';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -60,6 +62,8 @@ const App = () => {
                 <Route path="/community/new" element={<NewPost />} />
                 <Route path="/community/posts/:postId" element={<PostDetail />} />
                 <Route path="/search" element={<SearchResults />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/courses" element={<CourseManagement />} />
               </Routes>
             </ProtectedRoute>
           }
