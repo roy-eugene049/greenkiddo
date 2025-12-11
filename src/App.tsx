@@ -16,6 +16,7 @@ import BlogPostDetail from './pages/BlogPostDetail';
 import CommunityForum from './pages/CommunityForum';
 import PostDetail from './pages/PostDetail';
 import NewPost from './pages/NewPost';
+import SearchResults from './pages/SearchResults';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -58,6 +59,7 @@ const App = () => {
                 <Route path="/community" element={<CommunityForum />} />
                 <Route path="/community/new" element={<NewPost />} />
                 <Route path="/community/posts/:postId" element={<PostDetail />} />
+                <Route path="/search" element={<SearchResults />} />
               </Routes>
             </ProtectedRoute>
           }
