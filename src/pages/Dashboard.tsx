@@ -9,14 +9,16 @@ import { Course, UserProgress } from '../types/course';
 import { BookOpen, Award, Clock, TrendingUp, ArrowRight, Flame } from 'lucide-react';
 import { useUserDisplay } from '../hooks/useUserDisplay';
 import { getLearningStats, formatTimeSpent } from '../services/progressService';
+import { useCourseStore } from '../store/useCourseStore';
+import { useProgressStore } from '../store/useProgressStore';
 
 const Dashboard = () => {
   const { user, isLoaded } = useUser();
   const { displayName } = useUserDisplay();
-  const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
+  const { courses, enrolledCourses, setCourses, enrollInCourse, isEnrolled, getEnrolledCourses, loading, setLoading } = useCourseStore();
+  const { calculateCourseProgress } = useProgressStore();
   const [recommendedCourses, setRecommendedCourses] = useState<Course[]>([]);
   const [progressData, setProgressData] = useState<Record<string, UserProgress>>({});
-  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     coursesCompleted: 0,
     lessonsFinished: 0,
@@ -32,26 +34,37 @@ const Dashboard = () => {
       try {
         // Get all courses
         const allCourses = await CourseService.getAllCourses();
+        setCourses(allCourses);
         
-        // Mock: Assume user is enrolled in first 2 courses
-        // In real app, this would come from user's enrolled courses
-        const enrolled = allCourses.slice(0, 2);
-        setEnrolledCourses(enrolled);
+        // Get enrolled courses from store
+        const enrolled = getEnrolledCourses();
+        const enrolledIds = enrolled.map(c => c.id);
 
-        // Get recommended courses (rest of the courses)
-        const recommended = allCourses.slice(2);
+        // Get recommended courses (courses not enrolled)
+        const recommended = allCourses.filter(c => !enrolledIds.includes(c.id));
         setRecommendedCourses(recommended);
 
         // Load progress for enrolled courses
-        const progressPromises = enrolled.map(course =>
-          CourseService.getUserProgress(user.id, course.id)
-        );
+        const progressPromises = enrolled.map(course => {
+          const progress = CourseService.getUserProgress(user.id, course.id);
+          const lessons = CourseService.getLessonsByCourseId(course.id);
+          return Promise.all([progress, lessons]).then(([prog, less]) => ({
+            courseId: course.id,
+            progress: prog,
+            totalLessons: less.length,
+          }));
+        });
         const progressResults = await Promise.all(progressPromises);
         
         const progressMap: Record<string, UserProgress> = {};
-        enrolled.forEach((course, index) => {
-          if (progressResults[index]) {
-            progressMap[course.id] = progressResults[index]!;
+        progressResults.forEach(({ courseId, progress, totalLessons }) => {
+          if (progress) {
+            // Calculate actual progress percentage
+            const actualProgress = calculateCourseProgress(user.id, courseId, totalLessons);
+            progressMap[courseId] = {
+              ...progress,
+              progressPercentage: actualProgress,
+            };
           }
         });
         setProgressData(progressMap);
@@ -79,13 +92,13 @@ const Dashboard = () => {
     
     try {
       await CourseService.enrollInCourse(user.id, courseId);
+      enrollInCourse(courseId);
       // Reload courses
       const allCourses = await CourseService.getAllCourses();
-      const course = allCourses.find(c => c.id === courseId);
-      if (course) {
-        setEnrolledCourses([...enrolledCourses, course]);
-        setRecommendedCourses(recommendedCourses.filter(c => c.id !== courseId));
-      }
+      setCourses(allCourses);
+      const enrolled = getEnrolledCourses();
+      const enrolledIds = enrolled.map(c => c.id);
+      setRecommendedCourses(allCourses.filter(c => !enrolledIds.includes(c.id)));
     } catch (error) {
       console.error('Error enrolling in course:', error);
     }
@@ -137,7 +150,7 @@ const Dashboard = () => {
               <BookOpen className="w-5 h-5 text-green-ecco" />
               <span className="text-gray-400 text-sm">Courses</span>
             </div>
-            <p className="text-2xl font-bold">{enrolledCourses.length}</p>
+            <p className="text-2xl font-bold">{getEnrolledCourses().length}</p>
             <p className="text-xs text-gray-500">Enrolled</p>
           </div>
 
@@ -176,12 +189,12 @@ const Dashboard = () => {
               <span className="text-gray-400 text-sm">Progress</span>
             </div>
             <p className="text-2xl font-bold">
-              {enrolledCourses.length > 0
+              {getEnrolledCourses().length > 0
                 ? Math.round(
                     Object.values(progressData).reduce(
                       (acc, p) => acc + p.progressPercentage,
                       0
-                    ) / enrolledCourses.length
+                    ) / getEnrolledCourses().length
                   )
                 : 0}%
             </p>
@@ -190,7 +203,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Continue Learning Section */}
-        {enrolledCourses.length > 0 && (
+        {getEnrolledCourses().length > 0 && (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -210,7 +223,7 @@ const Dashboard = () => {
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {enrolledCourses.map((course) => (
+              {getEnrolledCourses().map((course) => (
                 <CourseCard
                   key={course.id}
                   course={course}
@@ -256,7 +269,7 @@ const Dashboard = () => {
         )}
 
         {/* Empty State */}
-        {enrolledCourses.length === 0 && recommendedCourses.length === 0 && (
+        {getEnrolledCourses().length === 0 && recommendedCourses.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
