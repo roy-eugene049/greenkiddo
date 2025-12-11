@@ -20,6 +20,7 @@ import SearchResults from './pages/SearchResults';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CourseManagement from './pages/admin/CourseManagement';
 import AnalyticsDashboard from './pages/admin/AnalyticsDashboard';
+import UserManagement from './pages/admin/UserManagement';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -66,6 +67,7 @@ const App = () => {
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/courses" element={<CourseManagement />} />
                 <Route path="/admin/analytics" element={<AnalyticsDashboard />} />
+                <Route path="/admin/users" element={<UserManagement />} />
               </Routes>
             </ProtectedRoute>
           }
