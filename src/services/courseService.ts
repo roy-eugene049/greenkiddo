@@ -9,6 +9,12 @@ import {
   searchCourses
 } from './mockData';
 
+// Get custom courses from localStorage (admin-created courses)
+const getCustomCourses = (): Course[] => {
+  const stored = localStorage.getItem('greenkiddo_admin_courses');
+  return stored ? JSON.parse(stored) : [];
+};
+
 // This service will eventually connect to a real backend
 // For now, it uses mock data
 
@@ -17,13 +23,23 @@ export class CourseService {
   static async getAllCourses(): Promise<Course[]> {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 300));
-    return mockCourses;
+    // Merge mock courses with custom (admin-created) courses
+    const customCourses = getCustomCourses();
+    return [...mockCourses, ...customCourses];
   }
 
   // Get course by ID
   static async getCourseById(id: string): Promise<Course | null> {
     await new Promise(resolve => setTimeout(resolve, 200));
-    const course = getCourseById(id);
+    // Check mock courses first
+    let course = getCourseById(id);
+    
+    // If not found, check custom courses
+    if (!course) {
+      const customCourses = getCustomCourses();
+      course = customCourses.find(c => c.id === id) || null;
+    }
+    
     if (!course) return null;
     
     // Attach lessons to course (lessons are loaded separately)

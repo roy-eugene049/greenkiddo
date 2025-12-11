@@ -112,21 +112,47 @@ export const getAdminUserById = async (userId: string): Promise<AdminUser | null
   return mockAdminUsers.find(user => user.id === userId) || null;
 };
 
+const STORAGE_KEY_COURSES = 'greenkiddo_admin_courses';
+
+/**
+ * Get custom courses from localStorage
+ */
+const getCustomCourses = (): Course[] => {
+  const stored = localStorage.getItem(STORAGE_KEY_COURSES);
+  return stored ? JSON.parse(stored) : [];
+};
+
+/**
+ * Save custom courses to localStorage
+ */
+const saveCustomCourses = (courses: Course[]): void => {
+  localStorage.setItem(STORAGE_KEY_COURSES, JSON.stringify(courses));
+};
+
 /**
  * Create a new course
  */
-export const createCourse = async (courseData: Omit<Course, 'id' | 'createdAt' | 'updatedAt'>): Promise<Course> => {
+export const createCourse = async (courseData: Omit<Course, 'id' | 'createdAt' | 'updatedAt' | 'lessons' | 'enrolledCount' | 'rating'>): Promise<Course> => {
   await new Promise(resolve => setTimeout(resolve, 500));
   
   const newCourse: Course = {
     ...courseData,
     id: `course-${Date.now()}`,
+    lessons: [],
+    enrolledCount: 0,
+    rating: {
+      average: 0,
+      count: 0,
+    },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
 
-  // In real app, this would save to backend
-  // For now, we'll just return the created course
+  // Save to localStorage
+  const customCourses = getCustomCourses();
+  customCourses.push(newCourse);
+  saveCustomCourses(customCourses);
+
   return newCourse;
 };
 
@@ -145,7 +171,14 @@ export const updateCourse = async (courseId: string, updates: Partial<Course>): 
     updatedAt: new Date().toISOString(),
   };
 
-  // In real app, this would save to backend
+  // Update in localStorage if it's a custom course
+  const customCourses = getCustomCourses();
+  const index = customCourses.findIndex(c => c.id === courseId);
+  if (index !== -1) {
+    customCourses[index] = updatedCourse;
+    saveCustomCourses(customCourses);
+  }
+
   return updatedCourse;
 };
 
@@ -157,6 +190,14 @@ export const deleteCourse = async (courseId: string): Promise<boolean> => {
   
   const course = await CourseService.getCourseById(courseId);
   if (!course) return false;
+
+  // Remove from localStorage if it's a custom course
+  const customCourses = getCustomCourses();
+  const filtered = customCourses.filter(c => c.id !== courseId);
+  if (filtered.length !== customCourses.length) {
+    saveCustomCourses(filtered);
+    return true;
+  }
 
   // In real app, this would delete from backend
   return true;

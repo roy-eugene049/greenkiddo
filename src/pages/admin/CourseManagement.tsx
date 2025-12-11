@@ -32,6 +32,7 @@ const CourseManagement = () => {
   const loadCourses = async () => {
     setLoading(true);
     try {
+      // Always fetch fresh data from service (which includes custom courses)
       const allCourses = await CourseService.getAllCourses();
       setCourses(allCourses);
     } catch (error) {
