@@ -14,6 +14,7 @@ import {
   Award,
   Clock,
   Shield,
+  Settings,
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -243,7 +244,7 @@ const AdminDashboard = () => {
           className="mt-8 bg-gray-900 border border-gray-800 rounded-lg p-6"
         >
           <h2 className="text-2xl font-bold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
             <Link
               to="/dashboard/admin/courses/new"
               className="p-4 bg-green-ecco/20 border border-green-ecco/50 rounded-lg hover:bg-green-ecco/30 transition-colors"
@@ -267,6 +268,14 @@ const AdminDashboard = () => {
               <FileText className="w-6 h-6 text-orange-400 mb-2" />
               <h3 className="font-semibold mb-1">Blog Management</h3>
               <p className="text-sm text-gray-400">Create and manage blog posts</p>
+            </Link>
+            <Link
+              to="/dashboard/admin/settings"
+              className="p-4 bg-indigo-400/20 border border-indigo-400/50 rounded-lg hover:bg-indigo-400/30 transition-colors"
+            >
+              <Settings className="w-6 h-6 text-indigo-400 mb-2" />
+              <h3 className="font-semibold mb-1">Platform Settings</h3>
+              <p className="text-sm text-gray-400">Configure platform settings</p>
             </Link>
             <Link
               to="/dashboard/admin/moderation"
