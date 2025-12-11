@@ -19,6 +19,7 @@ import NewPost from './pages/NewPost';
 import SearchResults from './pages/SearchResults';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CourseManagement from './pages/admin/CourseManagement';
+import AnalyticsDashboard from './pages/admin/AnalyticsDashboard';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -64,6 +65,7 @@ const App = () => {
                 <Route path="/search" element={<SearchResults />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/courses" element={<CourseManagement />} />
+                <Route path="/admin/analytics" element={<AnalyticsDashboard />} />
               </Routes>
             </ProtectedRoute>
           }
