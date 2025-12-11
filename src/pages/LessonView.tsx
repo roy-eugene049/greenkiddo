@@ -20,6 +20,7 @@ import {
   BookmarkCheck
 } from 'lucide-react';
 import NotesPanel from '../components/lesson/NotesPanel';
+import { recordLearningSession, recordLessonCompletion } from '../services/progressService';
 
 const LessonView = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
@@ -34,6 +35,7 @@ const LessonView = () => {
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notesOpen, setNotesOpen] = useState(false);
+  const [lessonStartTime, setLessonStartTime] = useState<Date | null>(null);
 
   useEffect(() => {
     const loadLessonData = async () => {
@@ -82,6 +84,41 @@ const LessonView = () => {
     loadLessonData();
   }, [courseId, lessonId, user]);
 
+  // Track time spent on lesson
+  useEffect(() => {
+    if (!user || !lessonId) return;
+
+    // Start tracking time when lesson loads
+    setLessonStartTime(new Date());
+
+    // Cleanup: Record time spent when component unmounts or lesson changes
+    return () => {
+      if (lessonStartTime && user && lessonId) {
+        const timeSpent = (new Date().getTime() - lessonStartTime.getTime()) / 1000 / 60; // Convert to minutes
+        if (timeSpent > 0.5) { // Only record if more than 30 seconds
+          recordLearningSession(user.id, lessonId, Math.round(timeSpent));
+        }
+      }
+    };
+  }, [lessonId, user]);
+
+  // Track time periodically (every 30 seconds) while viewing lesson
+  useEffect(() => {
+    if (!user || !lessonId || !lessonStartTime) return;
+
+    const interval = setInterval(() => {
+      if (lessonStartTime) {
+        const timeSpent = (new Date().getTime() - lessonStartTime.getTime()) / 1000 / 60;
+        if (timeSpent >= 0.5) { // Record every 30 seconds
+          recordLearningSession(user.id, lessonId, 0.5); // Record 0.5 minutes (30 seconds)
+          setLessonStartTime(new Date()); // Reset start time
+        }
+      }
+    }, 30000); // Every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [lessonId, user, lessonStartTime]);
+
   const handlePrevious = () => {
     if (currentLessonIndex > 0) {
       const prevLesson = lessons[currentLessonIndex - 1];
@@ -100,6 +137,17 @@ const LessonView = () => {
     if (!user || !courseId || !lessonId) return;
 
     try {
+      // Record final time spent
+      if (lessonStartTime) {
+        const timeSpent = (new Date().getTime() - lessonStartTime.getTime()) / 1000 / 60;
+        if (timeSpent > 0) {
+          recordLearningSession(user.id, lessonId, Math.round(timeSpent));
+        }
+      }
+
+      // Record lesson completion for streak tracking
+      recordLessonCompletion(user.id, lessonId);
+
       await CourseService.updateLessonProgress(user.id, courseId, lessonId, true);
       setCompletedLessons(new Set([...completedLessons, lessonId]));
       
@@ -555,6 +603,8 @@ const LessonView = () => {
         {user && (
           <NotesPanel
             lessonId={lessonId || ''}
+            lessonTitle={currentLesson?.title || 'Lesson'}
+            courseTitle={course?.title || 'Course'}
             isOpen={notesOpen}
             onClose={() => setNotesOpen(false)}
             userId={user.id}

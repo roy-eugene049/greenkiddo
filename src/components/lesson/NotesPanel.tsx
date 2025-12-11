@@ -1,20 +1,26 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Note } from '../../types/course';
-import { FileText, X, Save, Trash2 } from 'lucide-react';
+import { FileText, X, Save, Trash2, Download, Loader2 } from 'lucide-react';
+import { downloadNotesPDF } from '../../services/notesExportService';
+import { useUserDisplay } from '../../hooks/useUserDisplay';
 
 interface NotesPanelProps {
   lessonId: string;
+  lessonTitle: string;
+  courseTitle: string;
   isOpen: boolean;
   onClose: () => void;
   userId: string;
 }
 
-const NotesPanel = ({ lessonId, isOpen, onClose, userId }: NotesPanelProps) => {
+const NotesPanel = ({ lessonId, lessonTitle, courseTitle, isOpen, onClose, userId }: NotesPanelProps) => {
+  const { displayName } = useUserDisplay();
   const [notes, setNotes] = useState<Note[]>([]);
   const [currentNote, setCurrentNote] = useState('');
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -89,6 +95,28 @@ const NotesPanel = ({ lessonId, isOpen, onClose, userId }: NotesPanelProps) => {
     });
   };
 
+  const handleExportPDF = async () => {
+    if (notes.length === 0) {
+      alert('No notes to export');
+      return;
+    }
+
+    setExporting(true);
+    try {
+      await downloadNotesPDF({
+        notes,
+        lessonTitle,
+        courseTitle,
+        userName: displayName,
+      });
+    } catch (error) {
+      console.error('Error exporting notes:', error);
+      alert('Failed to export notes. Please try again.');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -116,12 +144,29 @@ const NotesPanel = ({ lessonId, isOpen, onClose, userId }: NotesPanelProps) => {
                 <FileText className="w-5 h-5 text-green-ecco" />
                 <h3 className="font-bold text-lg">Notes</h3>
               </div>
-              <button
-                onClick={onClose}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {notes.length > 0 && (
+                  <button
+                    onClick={handleExportPDF}
+                    disabled={exporting}
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm bg-green-ecco/20 text-green-ecco rounded-lg hover:bg-green-ecco/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Export notes as PDF"
+                  >
+                    {exporting ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Download className="w-4 h-4" />
+                    )}
+                    <span className="hidden sm:inline">Export</span>
+                  </button>
+                )}
+                <button
+                  onClick={onClose}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {/* Notes List */}

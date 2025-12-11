@@ -3,12 +3,17 @@ import { motion } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { Certificate } from '../types/course';
-import { GraduationCap, Download, Calendar, Award, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, Download, Calendar, Award, CheckCircle2, Loader2 } from 'lucide-react';
+import { downloadCertificatePDF } from '../services/certificateService';
+import { CourseService } from '../services/courseService';
+import { useUserDisplay } from '../hooks/useUserDisplay';
 
 const Certificates = () => {
   const { user } = useUser();
+  const { displayName } = useUserDisplay();
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [loading, setLoading] = useState(true);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   useEffect(() => {
     const loadCertificates = async () => {
@@ -46,10 +51,26 @@ const Certificates = () => {
     });
   };
 
-  const handleDownload = () => {
-    // In real app, this would download the PDF
-    // For now, we'll create a simple certificate display
-    window.print();
+  const handleDownload = async (certificate: Certificate) => {
+    if (!user || downloadingId) return;
+
+    setDownloadingId(certificate.id);
+    try {
+      // Get course details to fetch instructor name
+      const course = await CourseService.getCourseById(certificate.courseId);
+      const instructorName = course?.instructor?.name;
+
+      await downloadCertificatePDF(
+        certificate,
+        displayName,
+        instructorName
+      );
+    } catch (error) {
+      console.error('Error generating certificate PDF:', error);
+      alert('Failed to generate certificate. Please try again.');
+    } finally {
+      setDownloadingId(null);
+    }
   };
 
   if (loading) {
@@ -127,11 +148,21 @@ const Certificates = () => {
                     <span className="text-sm text-green-ecco font-semibold">Verified</span>
                   </div>
                   <button
-                    onClick={handleDownload}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-ecco text-black font-bold rounded-lg hover:bg-green-300 transition-colors"
+                    onClick={() => handleDownload(certificate)}
+                    disabled={downloadingId === certificate.id}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-ecco text-black font-bold rounded-lg hover:bg-green-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Download className="w-5 h-5" />
-                    Download PDF
+                    {downloadingId === certificate.id ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-5 h-5" />
+                        Download PDF
+                      </>
+                    )}
                   </button>
                 </div>
               </motion.div>

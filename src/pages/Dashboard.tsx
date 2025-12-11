@@ -6,8 +6,9 @@ import DashboardLayout from '../components/layout/DashboardLayout';
 import { CourseCard } from '../components/course/CourseCard';
 import { CourseService } from '../services/courseService';
 import { Course, UserProgress } from '../types/course';
-import { BookOpen, Award, Clock, TrendingUp, ArrowRight } from 'lucide-react';
+import { BookOpen, Award, Clock, TrendingUp, ArrowRight, Flame } from 'lucide-react';
 import { useUserDisplay } from '../hooks/useUserDisplay';
+import { getLearningStats, formatTimeSpent } from '../services/progressService';
 
 const Dashboard = () => {
   const { user, isLoaded } = useUser();
@@ -55,12 +56,13 @@ const Dashboard = () => {
         });
         setProgressData(progressMap);
 
-        // Calculate stats (mock data)
+        // Calculate stats using progress service
+        const learningStats = getLearningStats(user.id);
         setStats({
           coursesCompleted: 0,
           lessonsFinished: 0,
           certificatesEarned: 0,
-          totalTimeSpent: 0
+          totalTimeSpent: learningStats.totalTimeSpent
         });
       } catch (error) {
         console.error('Error loading dashboard data:', error);
@@ -128,7 +130,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
+          className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10"
         >
           <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
@@ -153,8 +155,19 @@ const Dashboard = () => {
               <Clock className="w-5 h-5 text-green-ecco" />
               <span className="text-gray-400 text-sm">Time Spent</span>
             </div>
-            <p className="text-2xl font-bold">{stats.totalTimeSpent}</p>
-            <p className="text-xs text-gray-500">Minutes</p>
+            <p className="text-xl font-bold">{formatTimeSpent(stats.totalTimeSpent)}</p>
+            <p className="text-xs text-gray-500">Total</p>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Flame className="w-5 h-5 text-orange-500" />
+              <span className="text-gray-400 text-sm">Streak</span>
+            </div>
+            <p className="text-2xl font-bold">
+              {user ? getLearningStats(user.id).currentStreak : 0}
+            </p>
+            <p className="text-xs text-gray-500">Days</p>
           </div>
 
           <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">

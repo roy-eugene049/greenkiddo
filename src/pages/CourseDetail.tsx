@@ -11,6 +11,7 @@ import {
   PlayCircle,
   ArrowRight
 } from 'lucide-react';
+import ReviewsSection from '../components/course/ReviewsSection';
 
 const CourseDetail = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -231,6 +232,17 @@ const CourseDetail = () => {
                 </div>
               </div>
             </motion.section>
+
+            {/* Reviews Section */}
+            {courseId && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <ReviewsSection courseId={courseId} />
+              </motion.section>
+            )}
           </div>
 
           {/* Sidebar */}
