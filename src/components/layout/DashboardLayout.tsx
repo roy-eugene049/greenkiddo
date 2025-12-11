@@ -21,6 +21,7 @@ import {
   BookmarkCheck,
   MessageSquare
 } from 'lucide-react';
+import NotificationBell from '../common/NotificationBell';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -220,10 +221,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-4">
-              <button className="text-gray-400 hover:text-white relative">
-                <Bell className="w-6 h-6" />
-                <span className="absolute top-0 right-0 w-2 h-2 bg-green-ecco rounded-full"></span>
-              </button>
+              <NotificationBell />
               <Link
                 to="/"
                 className="text-sm text-gray-400 hover:text-white transition-colors hidden md:block"

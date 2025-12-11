@@ -1,4 +1,5 @@
 import { UserProgress } from '../types/course';
+import { NotificationHelpers } from './notificationService';
 
 interface LearningSession {
   date: string; // ISO date string (YYYY-MM-DD)
@@ -97,6 +98,7 @@ export const recordLearningSession = (
   data.totalTimeSpent += timeSpentMinutes;
 
   // Update streak
+  const previousStreak = data.currentStreak;
   if (data.lastActivityDate === yesterday) {
     // Continuing streak
     data.currentStreak += 1;
@@ -114,6 +116,12 @@ export const recordLearningSession = (
       // First activity or continuing from yesterday
       data.currentStreak = data.currentStreak || 1;
     }
+  }
+
+  // Trigger streak milestone notifications
+  const newStreak = data.currentStreak;
+  if (newStreak > previousStreak && (newStreak === 7 || newStreak === 30 || newStreak === 100 || newStreak % 50 === 0)) {
+    NotificationHelpers.streakMilestone(userId, newStreak);
   }
 
   data.lastActivityDate = today;
@@ -145,6 +153,7 @@ export const recordLessonCompletion = (userId: string, lessonId: string): void =
   }
 
   // Update streak (same logic as recordLearningSession)
+  const previousStreak = data.currentStreak;
   const yesterday = getYesterdayDate();
   if (data.lastActivityDate === yesterday) {
     data.currentStreak += 1;
@@ -157,6 +166,12 @@ export const recordLessonCompletion = (userId: string, lessonId: string): void =
     } else {
       data.currentStreak = data.currentStreak || 1;
     }
+  }
+
+  // Trigger streak milestone notifications
+  const newStreak = data.currentStreak;
+  if (newStreak > previousStreak && (newStreak === 7 || newStreak === 30 || newStreak === 100 || newStreak % 50 === 0)) {
+    NotificationHelpers.streakMilestone(userId, newStreak);
   }
 
   data.lastActivityDate = today;

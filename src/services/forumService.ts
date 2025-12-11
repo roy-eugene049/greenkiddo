@@ -1,4 +1,5 @@
 import { ForumCategory, ForumPost, ForumComment } from '../types/forum';
+import { NotificationHelpers } from './notificationService';
 
 // Mock Forum Categories
 export const mockForumCategories: ForumCategory[] = [
@@ -347,6 +348,16 @@ export class ForumService {
     if (post) {
       post.commentCount += 1;
       post.lastActivityAt = new Date().toISOString();
+      
+      // Send notification to post author if it's not their own comment
+      if (post.author.id !== comment.author.id) {
+        NotificationHelpers.forumReply(
+          post.author.id,
+          post.title,
+          comment.author.name,
+          `/dashboard/community/posts/${post.id}`
+        );
+      }
     }
     
     return newComment;
