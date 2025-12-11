@@ -187,17 +187,37 @@ export const mockCategories: BlogCategory[] = [
   { id: '4', name: 'Activities', slug: 'activities', description: 'Fun family activities', postCount: 1 }
 ];
 
+const STORAGE_KEY_BLOG_POSTS = 'greenkiddo_admin_blog_posts';
+
+/**
+ * Get custom blog posts from localStorage
+ */
+const getCustomBlogPosts = (): BlogPost[] => {
+  const stored = localStorage.getItem(STORAGE_KEY_BLOG_POSTS);
+  return stored ? JSON.parse(stored) : [];
+};
+
+/**
+ * Save custom blog posts to localStorage
+ */
+const saveCustomBlogPosts = (posts: BlogPost[]): void => {
+  localStorage.setItem(STORAGE_KEY_BLOG_POSTS, JSON.stringify(posts));
+};
+
 export class BlogService {
   static async getAllPosts(): Promise<BlogPost[]> {
     await new Promise(resolve => setTimeout(resolve, 300));
-    return mockBlogPosts.sort((a, b) => 
+    const customPosts = getCustomBlogPosts();
+    return [...mockBlogPosts, ...customPosts].sort((a, b) => 
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
   }
 
   static async getPostBySlug(slug: string): Promise<BlogPost | null> {
     await new Promise(resolve => setTimeout(resolve, 200));
-    return mockBlogPosts.find(post => post.slug === slug) || null;
+    const customPosts = getCustomBlogPosts();
+    const allPosts = [...mockBlogPosts, ...customPosts];
+    return allPosts.find(post => post.slug === slug) || null;
   }
 
   static async getPostsByCategory(category: string): Promise<BlogPost[]> {
@@ -221,5 +241,103 @@ export class BlogService {
       post.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
     );
   }
+
+  static async getPostById(id: string): Promise<BlogPost | null> {
+    await new Promise(resolve => setTimeout(resolve, 200));
+    const stored = getCustomBlogPosts();
+    const allPosts = [...mockBlogPosts, ...stored];
+    return allPosts.find(post => post.id === id) || null;
+  }
 }
+
+/**
+ * Create a new blog post
+ */
+export const createBlogPost = async (postData: Omit<BlogPost, 'id' | 'publishedAt' | 'updatedAt' | 'views' | 'likes' | 'readTime'>): Promise<BlogPost> => {
+  await new Promise(resolve => setTimeout(resolve, 400));
+  
+  const slug = postData.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+  
+  const readTime = Math.ceil(postData.content.split(/\s+/).length / 200); // Estimate: 200 words per minute
+  
+  const newPost: BlogPost = {
+    ...postData,
+    id: `post-${Date.now()}`,
+    slug: postData.slug || slug,
+    publishedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    views: 0,
+    likes: 0,
+    readTime,
+  };
+
+  // Save to localStorage
+  const customPosts = getCustomBlogPosts();
+  customPosts.push(newPost);
+  saveCustomBlogPosts(customPosts);
+
+  return newPost;
+};
+
+/**
+ * Update a blog post
+ */
+export const updateBlogPost = async (postId: string, updates: Partial<BlogPost>): Promise<BlogPost | null> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const post = await BlogService.getPostById(postId);
+  if (!post) return null;
+
+  const updatedPost: BlogPost = {
+    ...post,
+    ...updates,
+    updatedAt: new Date().toISOString(),
+    readTime: updates.content ? Math.ceil(updates.content.split(/\s+/).length / 200) : post.readTime,
+  };
+
+  // Update in localStorage if it's a custom post
+  const customPosts = getCustomBlogPosts();
+  const index = customPosts.findIndex(p => p.id === postId);
+  if (index !== -1) {
+    customPosts[index] = updatedPost;
+    saveCustomBlogPosts(customPosts);
+  }
+
+  return updatedPost;
+};
+
+/**
+ * Delete a blog post
+ */
+export const deleteBlogPost = async (postId: string): Promise<boolean> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const post = await BlogService.getPostById(postId);
+  if (!post) return false;
+
+  // Remove from localStorage if it's a custom post
+  const customPosts = getCustomBlogPosts();
+  const filtered = customPosts.filter(p => p.id !== postId);
+  if (filtered.length !== customPosts.length) {
+    saveCustomBlogPosts(filtered);
+    return true;
+  }
+
+  // In real app, this would delete from backend
+  return true;
+};
+
+/**
+ * Get all blog posts (including custom ones)
+ */
+export const getAllBlogPosts = async (): Promise<BlogPost[]> => {
+  await new Promise(resolve => setTimeout(resolve, 200));
+  const customPosts = getCustomBlogPosts();
+  return [...mockBlogPosts, ...customPosts].sort(
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
+};
 
