@@ -288,3 +288,97 @@ export const deleteLesson = async (lessonId: string): Promise<boolean> => {
   return true;
 };
 
+const STORAGE_KEY_QUIZZES = 'greenkiddo_admin_quizzes';
+
+/**
+ * Get custom quizzes from localStorage
+ */
+const getCustomQuizzes = (): Quiz[] => {
+  const stored = localStorage.getItem(STORAGE_KEY_QUIZZES);
+  return stored ? JSON.parse(stored) : [];
+};
+
+/**
+ * Save custom quizzes to localStorage
+ */
+const saveCustomQuizzes = (quizzes: Quiz[]): void => {
+  localStorage.setItem(STORAGE_KEY_QUIZZES, JSON.stringify(quizzes));
+};
+
+/**
+ * Create a new quiz
+ */
+export const createQuiz = async (quizData: Omit<Quiz, 'id' | 'createdAt' | 'updatedAt'>): Promise<Quiz> => {
+  await new Promise(resolve => setTimeout(resolve, 400));
+  
+  const newQuiz: Quiz = {
+    ...quizData,
+    id: `quiz-${Date.now()}`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  // Save to localStorage
+  const customQuizzes = getCustomQuizzes();
+  customQuizzes.push(newQuiz);
+  saveCustomQuizzes(customQuizzes);
+
+  return newQuiz;
+};
+
+/**
+ * Update a quiz
+ */
+export const updateQuiz = async (quizId: string, updates: Partial<Quiz>): Promise<Quiz | null> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const quiz = await CourseService.getQuizById(quizId);
+  if (!quiz) return null;
+
+  const updatedQuiz: Quiz = {
+    ...quiz,
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+
+  // Update in localStorage if it's a custom quiz
+  const customQuizzes = getCustomQuizzes();
+  const index = customQuizzes.findIndex(q => q.id === quizId);
+  if (index !== -1) {
+    customQuizzes[index] = updatedQuiz;
+    saveCustomQuizzes(customQuizzes);
+  }
+
+  return updatedQuiz;
+};
+
+/**
+ * Delete a quiz
+ */
+export const deleteQuiz = async (quizId: string): Promise<boolean> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const quiz = await CourseService.getQuizById(quizId);
+  if (!quiz) return false;
+
+  // Remove from localStorage if it's a custom quiz
+  const customQuizzes = getCustomQuizzes();
+  const filtered = customQuizzes.filter(q => q.id !== quizId);
+  if (filtered.length !== customQuizzes.length) {
+    saveCustomQuizzes(filtered);
+    return true;
+  }
+
+  // In real app, this would delete from backend
+  return true;
+};
+
+/**
+ * Get all quizzes for a lesson
+ */
+export const getQuizzesByLessonId = async (lessonId: string): Promise<Quiz[]> => {
+  await new Promise(resolve => setTimeout(resolve, 200));
+  const customQuizzes = getCustomQuizzes();
+  return customQuizzes.filter(q => q.lessonId === lessonId);
+};
+

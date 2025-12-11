@@ -63,3 +63,35 @@ export interface CommentVote {
   vote: 'upvote' | 'downvote' | null;
 }
 
+export interface ContentReport {
+  id: string;
+  contentId: string;
+  contentType: 'post' | 'comment';
+  reason: string;
+  description?: string;
+  reportedBy: {
+    id: string;
+    name: string;
+  };
+  status: 'pending' | 'reviewed' | 'resolved' | 'dismissed';
+  reviewedBy?: {
+    id: string;
+    name: string;
+  };
+  reviewedAt?: string;
+  createdAt: string;
+}
+
+export interface ModerationAction {
+  id: string;
+  contentId: string;
+  contentType: 'post' | 'comment';
+  action: 'approve' | 'reject' | 'delete' | 'lock' | 'unlock' | 'pin' | 'unpin';
+  reason?: string;
+  moderatedBy: {
+    id: string;
+    name: string;
+  };
+  createdAt: string;
+}
+

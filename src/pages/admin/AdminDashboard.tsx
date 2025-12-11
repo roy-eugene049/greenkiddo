@@ -13,6 +13,7 @@ import {
   Activity,
   Award,
   Clock,
+  Shield,
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -242,7 +243,7 @@ const AdminDashboard = () => {
           className="mt-8 bg-gray-900 border border-gray-800 rounded-lg p-6"
         >
           <h2 className="text-2xl font-bold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link
               to="/dashboard/admin/courses/new"
               className="p-4 bg-green-ecco/20 border border-green-ecco/50 rounded-lg hover:bg-green-ecco/30 transition-colors"
@@ -258,6 +259,14 @@ const AdminDashboard = () => {
               <Users className="w-6 h-6 text-blue-400 mb-2" />
               <h3 className="font-semibold mb-1">Manage Users</h3>
               <p className="text-sm text-gray-400">View and manage user accounts</p>
+            </Link>
+            <Link
+              to="/dashboard/admin/moderation"
+              className="p-4 bg-red-400/20 border border-red-400/50 rounded-lg hover:bg-red-400/30 transition-colors"
+            >
+              <Shield className="w-6 h-6 text-red-400 mb-2" />
+              <h3 className="font-semibold mb-1">Content Moderation</h3>
+              <p className="text-sm text-gray-400">Review and moderate content</p>
             </Link>
             <Link
               to="/dashboard/admin/analytics"
