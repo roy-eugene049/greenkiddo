@@ -16,6 +16,7 @@ import {
   BookOpen,
   Loader2,
   X,
+  HelpCircle,
 } from 'lucide-react';
 
 const LessonManagement = () => {
@@ -231,6 +232,13 @@ const LessonManagement = () => {
 
                   {/* Actions */}
                   <div className="flex items-center gap-2">
+                    <Link
+                      to={`/dashboard/admin/courses/${courseId}/lessons/${lesson.id}/quizzes`}
+                      className="p-2 text-gray-400 hover:text-purple-400 transition-colors"
+                      title="Manage Quizzes"
+                    >
+                      <HelpCircle className="w-4 h-4" />
+                    </Link>
                     <Link
                       to={`/courses/${courseId}/lessons/${lesson.id}`}
                       className="p-2 text-gray-400 hover:text-blue-400 transition-colors"

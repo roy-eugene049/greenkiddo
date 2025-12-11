@@ -24,6 +24,8 @@ import UserManagement from './pages/admin/UserManagement';
 import CourseForm from './pages/admin/CourseForm';
 import LessonManagement from './pages/admin/LessonManagement';
 import LessonForm from './pages/admin/LessonForm';
+import QuizManagement from './pages/admin/QuizManagement';
+import QuizForm from './pages/admin/QuizForm';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -74,6 +76,9 @@ const App = () => {
                 <Route path="/admin/courses/:courseId/lessons" element={<LessonManagement />} />
                 <Route path="/admin/courses/:courseId/lessons/new" element={<LessonForm />} />
                 <Route path="/admin/courses/:courseId/lessons/:lessonId/edit" element={<LessonForm />} />
+                <Route path="/admin/courses/:courseId/lessons/:lessonId/quizzes" element={<QuizManagement />} />
+                <Route path="/admin/courses/:courseId/lessons/:lessonId/quizzes/new" element={<QuizForm />} />
+                <Route path="/admin/courses/:courseId/lessons/:lessonId/quizzes/:quizId/edit" element={<QuizForm />} />
                 <Route path="/admin/analytics" element={<AnalyticsDashboard />} />
                 <Route path="/admin/users" element={<UserManagement />} />
               </Routes>

@@ -1,4 +1,4 @@
-import { Course, Lesson } from '../types/course';
+import { Course, Lesson, Quiz } from '../types/course';
 import { AdminStats, AdminActivity, AdminUser } from '../types/admin';
 import { CourseService } from './courseService';
 import { getLearningStats } from './progressService';
