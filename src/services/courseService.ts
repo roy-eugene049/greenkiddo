@@ -15,6 +15,12 @@ const getCustomCourses = (): Course[] => {
   return stored ? JSON.parse(stored) : [];
 };
 
+// Get custom lessons from localStorage (admin-created lessons)
+const getCustomLessons = (): Lesson[] => {
+  const stored = localStorage.getItem('greenkiddo_admin_lessons');
+  return stored ? JSON.parse(stored) : [];
+};
+
 // This service will eventually connect to a real backend
 // For now, it uses mock data
 
@@ -49,13 +55,23 @@ export class CourseService {
   // Get lessons for a course
   static async getLessonsByCourseId(courseId: string): Promise<Lesson[]> {
     await new Promise(resolve => setTimeout(resolve, 200));
-    return getLessonsByCourseId(courseId);
+    const mockLessons = getLessonsByCourseId(courseId);
+    // Also get custom lessons for this course
+    const customLessons = getCustomLessons();
+    const courseCustomLessons = customLessons.filter(l => l.courseId === courseId);
+    return [...mockLessons, ...courseCustomLessons].sort((a, b) => a.order - b.order);
   }
 
   // Get lesson by ID
   static async getLessonById(lessonId: string): Promise<Lesson | null> {
     await new Promise(resolve => setTimeout(resolve, 200));
-    return mockLessons.find(lesson => lesson.id === lessonId) || null;
+    // Check mock lessons first
+    const mockLesson = mockLessons.find(lesson => lesson.id === lessonId);
+    if (mockLesson) return mockLesson;
+    
+    // Check custom lessons
+    const customLessons = getCustomLessons();
+    return customLessons.find(lesson => lesson.id === lessonId) || null;
   }
 
   // Get quiz by ID

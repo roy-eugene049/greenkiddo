@@ -15,6 +15,7 @@ import {
   Search,
   Filter,
   MoreVertical,
+  FileText,
 } from 'lucide-react';
 
 const CourseManagement = () => {
@@ -226,6 +227,13 @@ const CourseManagement = () => {
 
                     {/* Actions */}
                     <div className="flex items-center gap-3">
+                      <Link
+                        to={`/dashboard/admin/courses/${course.id}/lessons`}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors"
+                      >
+                        <FileText className="w-4 h-4" />
+                        Manage Lessons
+                      </Link>
                       <Link
                         to={`/dashboard/admin/courses/${course.id}/edit`}
                         className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"

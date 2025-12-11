@@ -203,6 +203,23 @@ export const deleteCourse = async (courseId: string): Promise<boolean> => {
   return true;
 };
 
+const STORAGE_KEY_LESSONS = 'greenkiddo_admin_lessons';
+
+/**
+ * Get custom lessons from localStorage
+ */
+const getCustomLessons = (): Lesson[] => {
+  const stored = localStorage.getItem(STORAGE_KEY_LESSONS);
+  return stored ? JSON.parse(stored) : [];
+};
+
+/**
+ * Save custom lessons to localStorage
+ */
+const saveCustomLessons = (lessons: Lesson[]): void => {
+  localStorage.setItem(STORAGE_KEY_LESSONS, JSON.stringify(lessons));
+};
+
 /**
  * Create a new lesson
  */
@@ -216,7 +233,11 @@ export const createLesson = async (lessonData: Omit<Lesson, 'id' | 'createdAt' |
     updatedAt: new Date().toISOString(),
   };
 
-  // In real app, this would save to backend
+  // Save to localStorage
+  const customLessons = getCustomLessons();
+  customLessons.push(newLesson);
+  saveCustomLessons(customLessons);
+
   return newLesson;
 };
 
@@ -235,7 +256,14 @@ export const updateLesson = async (lessonId: string, updates: Partial<Lesson>): 
     updatedAt: new Date().toISOString(),
   };
 
-  // In real app, this would save to backend
+  // Update in localStorage if it's a custom lesson
+  const customLessons = getCustomLessons();
+  const index = customLessons.findIndex(l => l.id === lessonId);
+  if (index !== -1) {
+    customLessons[index] = updatedLesson;
+    saveCustomLessons(customLessons);
+  }
+
   return updatedLesson;
 };
 
@@ -247,6 +275,14 @@ export const deleteLesson = async (lessonId: string): Promise<boolean> => {
   
   const lesson = await CourseService.getLessonById(lessonId);
   if (!lesson) return false;
+
+  // Remove from localStorage if it's a custom lesson
+  const customLessons = getCustomLessons();
+  const filtered = customLessons.filter(l => l.id !== lessonId);
+  if (filtered.length !== customLessons.length) {
+    saveCustomLessons(filtered);
+    return true;
+  }
 
   // In real app, this would delete from backend
   return true;
