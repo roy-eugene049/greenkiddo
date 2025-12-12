@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { Navbar, Hero, Blog, Contact, AboutUs, Services, Footer, ComingSoon } from './sections';
 import { SignedIn } from "@clerk/clerk-react"
@@ -32,12 +33,15 @@ import ContentModeration from './pages/admin/ContentModeration';
 import BlogManagement from './pages/admin/BlogManagement';
 import BlogForm from './pages/admin/BlogForm';
 import AdminSettings from './pages/admin/AdminSettings';
+import LiveClasses from './pages/LiveClasses';
+import LiveClassRoom from './pages/LiveClassRoom';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
 
 const App = () => {
   return (
+    <Fragment>
     <Router>
       <Routes>
         {/* Auth Routes - Redirect to Dashboard */}
@@ -75,6 +79,8 @@ const App = () => {
                 <Route path="/community/new" element={<NewPost />} />
                 <Route path="/community/posts/:postId" element={<PostDetail />} />
                 <Route path="/search" element={<SearchResults />} />
+                <Route path="/live-classes" element={<LiveClasses />} />
+                <Route path="/live-classes/:classId" element={<LiveClassRoom />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/courses" element={<CourseManagement />} />
                 <Route path="/admin/courses/new" element={<CourseForm />} />
@@ -159,6 +165,7 @@ const App = () => {
     </Router>
     <InstallPrompt />
     <OfflineIndicator />
+    </Fragment>
   );
 }
 

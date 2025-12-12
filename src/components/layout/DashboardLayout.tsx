@@ -19,7 +19,8 @@ import {
   TrendingUp,
   Calendar,
   BookmarkCheck,
-  MessageSquare
+  MessageSquare,
+  Video
 } from 'lucide-react';
 import NotificationBell from '../common/NotificationBell';
 import SearchBar from '../common/SearchBar';
@@ -44,6 +45,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         { icon: Search, label: 'Browse Courses', path: '/courses' },
         { icon: BookmarkCheck, label: 'Bookmarks', path: '/dashboard/bookmarks' },
         { icon: MessageSquare, label: 'Community Forum', path: '/dashboard/community' },
+        { icon: Video, label: 'Live Classes', path: '/dashboard/live-classes' },
       ]
     },
     {
