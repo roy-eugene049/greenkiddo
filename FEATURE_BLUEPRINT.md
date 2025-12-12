@@ -175,25 +175,40 @@
 
 ### 🟠 **PRIORITY 2: User Experience Enhancements** (Week 3-4)
 
-#### 2.1 Enhanced Course Player
+#### 2.1 Enhanced Course Player ✅
 **Priority**: MEDIUM-HIGH
 **Estimated Effort**: 3-4 days
 **Dependencies**: Media upload system
 
 **Tasks**:
-- [ ] Video player with playback controls
-- [ ] Playback speed control
-- [ ] Subtitle/CC support
-- [ ] Video quality selection
-- [ ] Picture-in-picture mode
-- [ ] Downloadable resources
-- [ ] Interactive transcripts
-- [ ] Video bookmarking
+- [x] Video player with playback controls
+- [x] Playback speed control
+- [x] Subtitle/CC support
+- [x] Video quality selection
+- [x] Picture-in-picture mode
+- [x] Downloadable resources
+- [x] Interactive transcripts
+- [x] Video bookmarking
 
 **Benefits**:
 - Better learning experience
 - Accessibility improvements
 - Professional course delivery
+
+**Implementation Details**:
+- Created `VideoPlayer` component using `react-player`
+- Full playback controls (play/pause, volume, seek, skip forward/backward)
+- Playback speed control (0.25x to 2x)
+- Subtitle/CC support with multiple language options
+- Video quality selection (Auto, 1080p, 720p, 480p, 360p)
+- Picture-in-picture mode support
+- Resources panel for downloadable files
+- Interactive transcript panel
+- Video bookmarking with visual indicators on progress bar
+- Auto-hiding controls with mouse movement detection
+- Fullscreen support
+- Integrated into LessonView for video and mixed content types
+- Bookmark service for managing video bookmarks
 
 ---
 

@@ -20,6 +20,8 @@ import {
   BookmarkCheck
 } from 'lucide-react';
 import NotesPanel from '../components/lesson/NotesPanel';
+import VideoPlayer from '../components/lesson/VideoPlayer';
+import { getLessonBookmarks, addBookmark, removeBookmark } from '../services/bookmarkService';
 import { recordLearningSession, recordLessonCompletion } from '../services/progressService';
 
 const LessonView = () => {
@@ -36,6 +38,7 @@ const LessonView = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notesOpen, setNotesOpen] = useState(false);
   const [lessonStartTime, setLessonStartTime] = useState<Date | null>(null);
+  const [videoBookmarks, setVideoBookmarks] = useState<number[]>([]);
 
   useEffect(() => {
     const loadLessonData = async () => {
@@ -72,6 +75,12 @@ const LessonView = () => {
           const savedBookmarks = localStorage.getItem(`bookmarks-${user.id}`);
           if (savedBookmarks) {
             setBookmarkedLessons(new Set(JSON.parse(savedBookmarks)));
+          }
+          
+          // Load video bookmarks for current lesson
+          if (lessonId) {
+            const videoBookmarksList = getLessonBookmarks(user.id, lessonId);
+            setVideoBookmarks(videoBookmarksList);
           }
         }
       } catch (error) {
@@ -461,19 +470,36 @@ const LessonView = () => {
               {/* Video Player */}
               {currentLesson.content.type === 'video' && currentLesson.content.videoUrl && (
                 <div className="mb-8">
-                  <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden border border-gray-800">
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="text-center">
-                        <PlayCircle className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <p className="text-gray-400">
-                          Video player would be embedded here
-                        </p>
-                        <p className="text-sm text-gray-500 mt-2">
-                          {currentLesson.content.videoUrl}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <VideoPlayer
+                    url={currentLesson.content.videoUrl}
+                    title={currentLesson.title}
+                    bookmarks={videoBookmarks}
+                    onBookmarkAdd={(time) => {
+                      if (user && courseId && lessonId) {
+                        addBookmark(user.id, lessonId, courseId, time);
+                        setVideoBookmarks([...videoBookmarks, Math.floor(time)].sort((a, b) => a - b));
+                      }
+                    }}
+                    onBookmarkRemove={(time) => {
+                      if (user && lessonId) {
+                        removeBookmark(user.id, lessonId, time);
+                        setVideoBookmarks(videoBookmarks.filter(b => Math.abs(b - time) >= 2));
+                      }
+                    }}
+                    onProgress={(progress) => {
+                      // Track progress for analytics
+                    }}
+                    onEnded={() => {
+                      // Mark lesson as complete when video ends
+                      if (user && lessonId) {
+                        recordLessonCompletion(user.id, lessonId);
+                        setCompletedLessons(new Set([...completedLessons, lessonId]));
+                      }
+                    }}
+                    resources={[]}
+                    subtitles={[]}
+                    transcript={currentLesson.description}
+                  />
                 </div>
               )}
 
@@ -494,14 +520,26 @@ const LessonView = () => {
                 <div className="space-y-8">
                   {currentLesson.content.videoUrl && (
                     <div className="mb-8">
-                      <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden border border-gray-800">
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="text-center">
-                            <PlayCircle className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                            <p className="text-gray-400">Video content</p>
-                          </div>
-                        </div>
-                      </div>
+                      <VideoPlayer
+                        url={currentLesson.content.videoUrl}
+                        title={currentLesson.title}
+                        bookmarks={videoBookmarks}
+                        onBookmarkAdd={(time) => {
+                          if (user && courseId && lessonId) {
+                            addBookmark(user.id, lessonId, courseId, time);
+                            setVideoBookmarks([...videoBookmarks, Math.floor(time)].sort((a, b) => a - b));
+                          }
+                        }}
+                        onBookmarkRemove={(time) => {
+                          if (user && lessonId) {
+                            removeBookmark(user.id, lessonId, time);
+                            setVideoBookmarks(videoBookmarks.filter(b => Math.abs(b - time) >= 2));
+                          }
+                        }}
+                        resources={[]}
+                        subtitles={[]}
+                        transcript={currentLesson.description}
+                      />
                     </div>
                   )}
                   {currentLesson.content.articleContent && (
