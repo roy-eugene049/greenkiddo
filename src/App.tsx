@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { Navbar, Hero, Blog, Contact, AboutUs, Services, Footer, ComingSoon } from './sections';
 import { SignedIn } from "@clerk/clerk-react"
 import ProtectedRoute from './components/ProtectedRoute';
+import InstallPrompt from './components/common/InstallPrompt';
+import OfflineIndicator from './components/common/OfflineIndicator';
 import Dashboard from './pages/Dashboard';
 import CourseCatalog from './pages/CourseCatalog';
 import CourseDetail from './pages/CourseDetail';
@@ -155,6 +157,8 @@ const App = () => {
         />
       </Routes>
     </Router>
+    <InstallPrompt />
+    <OfflineIndicator />
   );
 }
 
