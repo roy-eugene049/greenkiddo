@@ -91,7 +91,12 @@ const Dashboard = () => {
     if (!user) return;
     
     try {
-      await CourseService.enrollInCourse(user.id, courseId);
+      await CourseService.enrollInCourse(
+        user.id,
+        courseId,
+        user.emailAddresses[0]?.emailAddress,
+        user.fullName || user.firstName || 'User'
+      );
       enrollInCourse(courseId);
       // Reload courses
       const allCourses = await CourseService.getAllCourses();

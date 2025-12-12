@@ -118,10 +118,28 @@ export class CourseService {
   }
 
   // Enroll in course (mock - will need backend)
-  static async enrollInCourse(userId: string, courseId: string): Promise<boolean> {
+  static async enrollInCourse(userId: string, courseId: string, userEmail?: string, userName?: string): Promise<boolean> {
     await new Promise(resolve => setTimeout(resolve, 500));
     // In real implementation, this would call an API
     console.log(`User ${userId} enrolled in course ${courseId}`);
+    
+    // Send enrollment email if user info provided
+    if (userEmail && userName) {
+      const course = await this.getCourseById(courseId);
+      if (course) {
+        // Import and send email asynchronously (don't block enrollment)
+        import('./emailHelpers').then(({ sendEnrollmentEmail }) => {
+          sendEnrollmentEmail({
+            userName,
+            userEmail,
+            courseTitle: course.title,
+            courseId: course.id,
+            instructorName: course.instructor.name,
+          }).catch(err => console.error('Failed to send enrollment email:', err));
+        });
+      }
+    }
+    
     return true;
   }
 

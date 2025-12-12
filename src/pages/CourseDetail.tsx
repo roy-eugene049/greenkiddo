@@ -60,7 +60,12 @@ const CourseDetail = () => {
 
     setEnrolling(true);
     try {
-      await CourseService.enrollInCourse(user.id, courseId);
+      await CourseService.enrollInCourse(
+        user.id,
+        courseId,
+        user.emailAddresses[0]?.emailAddress,
+        user.fullName || user.firstName || 'User'
+      );
       setIsEnrolled(true);
       // Navigate to first lesson
       if (lessons.length > 0) {
