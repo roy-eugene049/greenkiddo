@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import DashboardLayout from '../../components/layout/DashboardLayout';
+import ImageUpload from '../../components/common/ImageUpload';
 import { Course } from '../../types/course';
 import { CourseService } from '../../services/courseService';
 import { createCourse, updateCourse } from '../../services/adminService';
@@ -260,13 +261,22 @@ const CourseForm = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2">
-                  Thumbnail URL
-                </label>
+                <ImageUpload
+                  value={watch('thumbnail') || ''}
+                  onChange={(url) => setValue('thumbnail', url)}
+                  label="Course Thumbnail"
+                  maxSize={5 * 1024 * 1024} // 5MB
+                  compress={true}
+                  aspectRatio={16 / 9}
+                  className="mb-4"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Or enter a URL manually:
+                </p>
                 <input
                   {...register('thumbnail')}
                   type="url"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-green-ecco"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-green-ecco mt-2"
                   placeholder="https://example.com/image.jpg"
                 />
                 {errors.thumbnail && (

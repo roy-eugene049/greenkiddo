@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import ImageUpload from '../../components/common/ImageUpload';
 import { BlogPost } from '../../types/blog';
 import { BlogService } from '../../services/blogService';
 import { createBlogPost, updateBlogPost } from '../../services/blogService';
@@ -279,13 +280,22 @@ const BlogForm = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2">
-                  Featured Image URL
-                </label>
+                <ImageUpload
+                  value={watch('featuredImage') || ''}
+                  onChange={(url) => setValue('featuredImage', url)}
+                  label="Featured Image"
+                  maxSize={5 * 1024 * 1024} // 5MB
+                  compress={true}
+                  aspectRatio={16 / 9}
+                  className="mb-4"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Or enter a URL manually:
+                </p>
                 <input
                   {...register('featuredImage')}
                   type="url"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-green-ecco"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-green-ecco mt-2"
                   placeholder="https://example.com/image.jpg"
                 />
                 {errors.featuredImage && (

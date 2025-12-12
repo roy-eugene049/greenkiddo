@@ -84,11 +84,42 @@ const RichTextEditor = ({
     return null;
   }
 
-  const addImage = () => {
-    const url = window.prompt('Enter image URL:');
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
+  const addImage = async () => {
+    // Create file input
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      try {
+        // Import upload function dynamically
+        const { uploadFile } = await import('../../services/mediaService');
+        
+        // Show loading state
+        editor.chain().focus().setImage({ src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' }).run();
+        
+        // Upload file
+        const result = await uploadFile(file, {
+          compress: true,
+          quality: 0.8,
+        });
+
+        // Replace with uploaded image
+        editor.chain().focus().setImage({ src: result.url }).run();
+      } catch (error) {
+        // Fallback to URL prompt
+        const url = window.prompt('Upload failed. Enter image URL instead:');
+        if (url) {
+          editor.chain().focus().setImage({ src: url }).run();
+        } else {
+          // Remove placeholder image
+          editor.chain().focus().deleteSelection().run();
+        }
+      }
+    };
+    input.click();
   };
 
   const addLink = () => {

@@ -189,17 +189,26 @@ class ApiClient {
 
     // Build request
     const url = this.buildURL(endpoint, params);
-    const requestHeaders = {
-      ...this.defaultHeaders,
-      ...authHeaders,
-      ...headers,
-    };
+    
+    // Handle FormData - don't stringify and don't set Content-Type
+    const isFormData = body instanceof FormData;
+    const requestHeaders = isFormData
+      ? {
+          ...authHeaders,
+          ...headers,
+          // Don't set Content-Type for FormData, let browser set it with boundary
+        }
+      : {
+          ...this.defaultHeaders,
+          ...authHeaders,
+          ...headers,
+        };
 
     const requestFn = async (): Promise<T> => {
       const fetchPromise = fetch(url, {
         method,
         headers: requestHeaders,
-        body: body ? JSON.stringify(body) : undefined,
+        body: isFormData ? body : (body ? JSON.stringify(body) : undefined),
         signal: finalSignal,
         ...restConfig,
       });
