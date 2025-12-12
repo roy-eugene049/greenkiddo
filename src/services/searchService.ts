@@ -266,6 +266,41 @@ export const globalSearch = async (options: SearchOptions): Promise<SearchResult
         );
       });
     }
+
+    // Date range filter
+    if (filters.dateRange && (filters.dateRange.from || filters.dateRange.to)) {
+      filteredResults = filteredResults.filter(result => {
+        const resultDate = result.metadata?.date;
+        if (!resultDate) return false;
+        
+        const date = new Date(resultDate);
+        if (filters.dateRange?.from && date < new Date(filters.dateRange.from)) {
+          return false;
+        }
+        if (filters.dateRange?.to && date > new Date(filters.dateRange.to)) {
+          return false;
+        }
+        return true;
+      });
+    }
+
+    // Duration filter (for courses and lessons)
+    if (filters.duration) {
+      filteredResults = filteredResults.filter(result => {
+        if (result.type !== 'course' && result.type !== 'lesson') return true;
+        
+        const duration = result.metadata?.duration as number | undefined;
+        if (!duration) return false;
+        
+        if (filters.duration?.min && duration < filters.duration.min) {
+          return false;
+        }
+        if (filters.duration?.max && duration > filters.duration.max) {
+          return false;
+        }
+        return true;
+      });
+    }
   }
 
   // Sort results

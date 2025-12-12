@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, BookOpen, FileText, MessageSquare, Newspaper, Loader2 } from 'lucide-react';
+import { Search, X, BookOpen, FileText, MessageSquare, Newspaper, Loader2, History, TrendingUp } from 'lucide-react';
 import { SearchResult } from '../../types/search';
 import { quickSearch } from '../../services/searchService';
+import { getSearchHistory, getPopularSearches } from '../../services/searchHistoryService';
 
 interface SearchBarProps {
   className?: string;
@@ -12,11 +14,15 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ className = '', placeholder = 'Search courses, lessons, blog posts...', onSearch }: SearchBarProps) => {
+  const { user } = useUser();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [popularSearches, setPopularSearches] = useState<string[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -38,12 +44,29 @@ const SearchBar = ({ className = '', placeholder = 'Search courses, lessons, blo
   }, [isOpen]);
 
   useEffect(() => {
-    if (query.length < 2) {
+    if (user) {
+      const history = getSearchHistory(user.id);
+      setSearchHistory(history.slice(0, 5).map(item => item.query));
+      setPopularSearches(getPopularSearches(user.id).slice(0, 5));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (query.length === 0) {
       setResults([]);
       setIsOpen(false);
+      setShowSuggestions(true);
       return;
     }
 
+    if (query.length < 2) {
+      setResults([]);
+      setIsOpen(false);
+      setShowSuggestions(true);
+      return;
+    }
+
+    setShowSuggestions(false);
     const searchTimeout = setTimeout(async () => {
       setIsLoading(true);
       try {

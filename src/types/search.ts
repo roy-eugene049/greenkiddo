@@ -23,6 +23,14 @@ export interface SearchFilters {
   category?: string[];
   difficulty?: string[];
   tags?: string[];
+  dateRange?: {
+    from?: string;
+    to?: string;
+  };
+  duration?: {
+    min?: number; // in minutes
+    max?: number; // in minutes
+  };
 }
 
 export interface SearchOptions {
