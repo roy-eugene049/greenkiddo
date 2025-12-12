@@ -26,6 +26,7 @@ export interface Course {
     count: number;
   };
   language: string;
+  prerequisites?: string[]; // Course IDs that must be completed first
   createdAt: string;
   updatedAt: string;
   isPublished: boolean;

@@ -40,9 +40,10 @@ const Dashboard = () => {
         const enrolled = getEnrolledCourses();
         const enrolledIds = enrolled.map(c => c.id);
 
-        // Get recommended courses (courses not enrolled)
-        const recommended = allCourses.filter(c => !enrolledIds.includes(c.id));
-        setRecommendedCourses(recommended);
+        // Get recommended courses using recommendation service
+        const { getRecommendations } = await import('../services/recommendationService');
+        const recommendations = await getRecommendations(user.id, 6);
+        setRecommendedCourses(recommendations.map(r => r.course));
 
         // Load progress for enrolled courses
         const progressPromises = enrolled.map(course => {
@@ -103,7 +104,9 @@ const Dashboard = () => {
       setCourses(allCourses);
       const enrolled = getEnrolledCourses();
       const enrolledIds = enrolled.map(c => c.id);
-      setRecommendedCourses(allCourses.filter(c => !enrolledIds.includes(c.id)));
+      // Reload recommendations
+      const recommendations = await getRecommendations(user.id, 6);
+      setRecommendedCourses(recommendations.map(r => r.course));
     } catch (error) {
       console.error('Error enrolling in course:', error);
     }
@@ -240,6 +243,18 @@ const Dashboard = () => {
           </motion.section>
         )}
 
+
+        {/* Next Steps */}
+        {user && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mb-8"
+          >
+            <NextStepsPanel userId={user.id} />
+          </motion.section>
+        )}
 
         {/* Recommended Courses */}
         {recommendedCourses.length > 0 && (
