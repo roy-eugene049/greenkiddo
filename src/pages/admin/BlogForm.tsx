@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import DashboardLayout from '../../components/layout/DashboardLayout';
+import RichTextEditor from '../../components/common/RichTextEditor';
 import { BlogPost } from '../../types/blog';
 import { BlogService } from '../../services/blogService';
 import { createBlogPost, updateBlogPost } from '../../services/blogService';
@@ -300,19 +301,19 @@ const BlogForm = () => {
             
             <div>
               <label className="block text-sm font-semibold mb-2">
-                Post Content * (Markdown supported)
+                Post Content *
               </label>
-              <textarea
-                {...register('content')}
-                rows={20}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-green-ecco resize-none font-mono text-sm"
-                placeholder="Write your blog post content here. Markdown is supported..."
+              <RichTextEditor
+                content={watch('content') || ''}
+                onChange={(html) => setValue('content', html)}
+                placeholder="Write your blog post content here..."
+                minHeight="400px"
               />
               {errors.content && (
-                <p className="text-red-400 text-xs mt-1">{errors.content.message}</p>
+                <p className="text-red-400 text-xs mt-2">{errors.content.message}</p>
               )}
               <p className="text-xs text-gray-500 mt-2">
-                You can use Markdown formatting for headings, lists, links, etc.
+                Use the toolbar to format your content. Supports headings, lists, links, images, and more.
               </p>
             </div>
           </div>

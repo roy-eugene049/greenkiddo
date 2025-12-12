@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import DashboardLayout from '../../components/layout/DashboardLayout';
+import RichTextEditor from '../../components/common/RichTextEditor';
 import { Lesson, LessonContent } from '../../types/course';
 import { CourseService } from '../../services/courseService';
 import { createLesson, updateLesson } from '../../services/adminService';
@@ -326,12 +327,15 @@ const LessonForm = () => {
                 <label className="block text-sm font-semibold mb-2">
                   Article Content *
                 </label>
-                <textarea
-                  {...register('content.articleContent')}
-                  rows={10}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-green-ecco resize-none font-mono text-sm"
-                  placeholder="Enter your article content here (Markdown or HTML supported)..."
+                <RichTextEditor
+                  content={watch('content.articleContent') || ''}
+                  onChange={(html) => setValue('content.articleContent', html)}
+                  placeholder="Enter your article content here..."
+                  minHeight="400px"
                 />
+                <p className="text-xs text-gray-500 mt-2">
+                  Use the toolbar to format your content. Supports headings, lists, links, images, and more.
+                </p>
               </div>
             )}
 

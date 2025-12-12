@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
+import RichTextEditor from '../components/common/RichTextEditor';
 import { ForumService } from '../services/forumService';
 import { ForumCategory } from '../types/forum';
 import { ArrowLeft, Send } from 'lucide-react';
@@ -34,7 +35,10 @@ const NewPost = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title.trim() || !content.trim() || !categoryId) {
+    // Check if content has actual text (strip HTML tags)
+    const plainTextContent = content.replace(/<[^>]*>/g, '').trim();
+    
+    if (!title.trim() || !plainTextContent || !categoryId) {
       setError('Please fill in all required fields');
       return;
     }
@@ -53,17 +57,27 @@ const NewPost = () => {
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0);
 
+      // Strip HTML tags for plain text validation, but keep HTML for storage
+      const plainTextContent = content.replace(/<[^>]*>/g, '').trim();
+      if (!plainTextContent) {
+        setError('Content cannot be empty');
+        setSubmitting(false);
+        return;
+      }
+
       const post = await ForumService.createPost({
         categoryId,
         title: title.trim(),
-        content: content.trim(),
+        content: content, // Store HTML content
         author: {
           id: user.id,
           name: displayName,
           avatar: displayAvatar.value,
           badges: []
         },
-        tags: tagArray
+        tags: tagArray,
+        isPinned: false,
+        isLocked: false
       });
 
       navigate(`/community/posts/${post.id}`);
@@ -171,16 +185,14 @@ const NewPost = () => {
               <label className="block text-white font-semibold mb-2">
                 Content <span className="text-red-500">*</span>
               </label>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Write your post content here. You can use markdown formatting."
-                className="w-full p-3 bg-gray-900 border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-green-ecco"
-                rows={12}
-                required
+              <RichTextEditor
+                content={content}
+                onChange={setContent}
+                placeholder="Write your post content here..."
+                minHeight="300px"
               />
-              <p className="text-sm text-gray-400 mt-1">
-                Tip: Use line breaks to separate paragraphs. Keep it clear and engaging!
+              <p className="text-sm text-gray-400 mt-2">
+                Use the toolbar to format your content. Supports headings, lists, links, images, and more.
               </p>
             </div>
 

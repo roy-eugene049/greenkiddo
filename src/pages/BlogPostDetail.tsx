@@ -125,27 +125,8 @@ const BlogPostDetail = () => {
       <article className="max-w-4xl mx-auto px-4 md:px-8 py-12">
         <div className="prose prose-invert max-w-none">
           <div
-            className="text-gray-300 leading-relaxed"
-            dangerouslySetInnerHTML={{
-              __html: post.content
-                .split('\n')
-                .map(line => {
-                  if (line.startsWith('# ')) {
-                    return `<h1 class="text-4xl font-bold mb-4 mt-8">${line.substring(2)}</h1>`;
-                  } else if (line.startsWith('## ')) {
-                    return `<h2 class="text-3xl font-bold mb-3 mt-6">${line.substring(3)}</h2>`;
-                  } else if (line.startsWith('### ')) {
-                    return `<h3 class="text-2xl font-bold mb-2 mt-4">${line.substring(4)}</h3>`;
-                  } else if (line.startsWith('**') && line.endsWith('**')) {
-                    return `<p class="font-semibold text-lg mb-4">${line.replace(/\*\*/g, '')}</p>`;
-                  } else if (line.trim() === '') {
-                    return '<br />';
-                  } else {
-                    return `<p class="mb-4">${line}</p>`;
-                  }
-                })
-                .join('')
-            }}
+            className="text-gray-300 leading-relaxed rich-content"
+            dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </div>
 

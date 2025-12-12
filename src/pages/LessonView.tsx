@@ -481,9 +481,9 @@ const LessonView = () => {
               {currentLesson.content.type === 'article' && currentLesson.content.articleContent && (
                 <div className="prose prose-invert max-w-none mb-8">
                   <div
-                    className="text-gray-300 leading-relaxed"
+                    className="text-gray-300 leading-relaxed rich-content"
                     dangerouslySetInnerHTML={{
-                      __html: currentLesson.content.articleContent.replace(/\n/g, '<br />')
+                      __html: currentLesson.content.articleContent
                     }}
                   />
                 </div>
@@ -507,9 +507,9 @@ const LessonView = () => {
                   {currentLesson.content.articleContent && (
                     <div className="prose prose-invert max-w-none">
                       <div
-                        className="text-gray-300 leading-relaxed"
+                        className="text-gray-300 leading-relaxed rich-content"
                         dangerouslySetInnerHTML={{
-                          __html: currentLesson.content.articleContent.replace(/\n/g, '<br />')
+                          __html: currentLesson.content.articleContent
                         }}
                       />
                     </div>

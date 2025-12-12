@@ -364,7 +364,10 @@ const PostDetail = () => {
               </div>
 
               <div className="prose prose-invert max-w-none mb-6">
-                <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">{post.content}</p>
+                <div
+                  className="text-gray-300 leading-relaxed rich-content"
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
               </div>
 
               {/* Author Info */}
