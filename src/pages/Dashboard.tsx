@@ -11,6 +11,8 @@ import { useUserDisplay } from '../hooks/useUserDisplay';
 import { getLearningStats, formatTimeSpent } from '../services/progressService';
 import { useCourseStore } from '../store/useCourseStore';
 import { useProgressStore } from '../store/useProgressStore';
+import NextStepsPanel from '../components/recommendations/NextStepsPanel';
+import { getRecommendations } from '../services/recommendationService';
 
 const Dashboard = () => {
   const { user, isLoaded } = useUser();

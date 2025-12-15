@@ -7,7 +7,8 @@
 import { CourseService } from './courseService';
 import { Course } from '../types/course';
 import { getLearningStats, getTotalTimeSpent } from './progressService';
-import { getEnrolledCourses } from '../store/useCourseStore';
+import { useCourseStore } from '../store/useCourseStore';
+import { useProgressStore } from '../store/useProgressStore';
 
 export interface LearningPath {
   id: string;
@@ -44,11 +45,10 @@ const LEARNING_PATHS_KEY = 'greenkiddo_learning_paths';
  */
 export async function getRecommendations(userId: string, limit: number = 10): Promise<Recommendation[]> {
   const allCourses = await CourseService.getAllCourses();
-  const enrolledCourses = getEnrolledCourses();
+  const enrolledCourses = useCourseStore.getState().getEnrolledCourses();
   const enrolledIds = new Set(enrolledCourses.map(c => c.id));
   
   // Get user progress data
-  const learningStats = getLearningStats(userId);
   const timeSpent = getTotalTimeSpent(userId);
   
   // Get completed courses
@@ -172,14 +172,14 @@ export async function getRecommendations(userId: string, limit: number = 10): Pr
  */
 export async function getNextSteps(userId: string): Promise<NextStep[]> {
   const nextSteps: NextStep[] = [];
-  const enrolledCourses = getEnrolledCourses();
+  const enrolledCourses = useCourseStore.getState().getEnrolledCourses();
   
   // 1. Continue in-progress courses
   for (const course of enrolledCourses) {
     const progress = await CourseService.getUserProgress(userId, course.id);
     if (progress && !progress.completed && progress.progressPercentage > 0) {
       const lessons = await CourseService.getLessonsByCourseId(course.id);
-      const completedLessonIds = progress.completedLessons || [];
+      const completedLessonIds = useProgressStore.getState().getCompletedLessons(userId, course.id);
       const nextLesson = lessons
         .sort((a, b) => a.order - b.order)
         .find(lesson => !completedLessonIds.includes(lesson.id));
@@ -220,22 +220,18 @@ export async function getNextSteps(userId: string): Promise<NextStep[]> {
   // 3. Complete lessons with quizzes
   for (const course of enrolledCourses) {
     const lessons = await CourseService.getLessonsByCourseId(course.id);
-    const progress = await CourseService.getUserProgress(userId, course.id);
-    const completedLessonIds = progress?.completedLessons || [];
+    const completedLessonIds = useProgressStore.getState().getCompletedLessons(userId, course.id);
     
     for (const lesson of lessons) {
       if (lesson.quizId && !completedLessonIds.includes(lesson.id)) {
-        const isCompleted = completedLessonIds.includes(lesson.id);
-        if (!isCompleted) {
-          nextSteps.push({
-            courseId: course.id,
-            lessonId: lesson.id,
-            type: 'take_quiz',
-            title: `Take Quiz: ${lesson.title}`,
-            description: `Complete the quiz for ${lesson.title}`,
-            priority: 30,
-          });
-        }
+        nextSteps.push({
+          courseId: course.id,
+          lessonId: lesson.id,
+          type: 'take_quiz',
+          title: `Take Quiz: ${lesson.title}`,
+          description: `Complete the quiz for ${lesson.title}`,
+          priority: 30,
+        });
       }
     }
   }
@@ -299,7 +295,7 @@ export function createLearningPath(
  */
 export async function getRecommendedPaths(userId: string): Promise<LearningPath[]> {
   const allPaths = getLearningPaths();
-  const enrolledCourses = getEnrolledCourses();
+  const enrolledCourses = useCourseStore.getState().getEnrolledCourses();
   const enrolledIds = new Set(enrolledCourses.map(c => c.id));
   
   // Score paths based on user progress

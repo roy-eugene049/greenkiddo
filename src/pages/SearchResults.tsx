@@ -110,7 +110,38 @@ const SearchResults = () => {
   const clearFilters = () => {
     setSelectedTypes([]);
     setSelectedCategories([]);
+    setSelectedDifficulties([]);
+    setDateRange({});
+    setDurationRange({});
     setSortBy('relevance');
+  };
+
+  const handleSaveSearch = () => {
+    if (!user || !query.trim()) return;
+    
+    const name = window.prompt('Name this search:');
+    if (name && name.trim()) {
+      const saved = saveSearch(user.id, name.trim(), query, {
+        type: selectedTypes.length > 0 ? selectedTypes : undefined,
+        category: selectedCategories.length > 0 ? selectedCategories : undefined,
+        difficulty: selectedDifficulties.length > 0 ? selectedDifficulties : undefined,
+        dateRange: (dateRange.from || dateRange.to) ? dateRange : undefined,
+        duration: (durationRange.min !== undefined || durationRange.max !== undefined) ? durationRange : undefined,
+      });
+      setSavedSearches([...savedSearches, saved]);
+    }
+  };
+
+  const handleLoadSavedSearch = (savedSearch: SavedSearch) => {
+    setSearchParams({ q: savedSearch.query });
+    setSelectedTypes(savedSearch.filters?.type || []);
+    setSelectedCategories(savedSearch.filters?.category || []);
+    setSelectedDifficulties(savedSearch.filters?.difficulty || []);
+    setDateRange(savedSearch.filters?.dateRange || {});
+    setDurationRange(savedSearch.filters?.duration || {});
+    if (user) {
+      updateSavedSearchUsage(user.id, savedSearch.id);
+    }
   };
 
   const getResultIcon = (type: string) => {
