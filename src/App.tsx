@@ -37,6 +37,8 @@ import LiveClasses from './pages/LiveClasses';
 import LiveClassRoom from './pages/LiveClassRoom';
 import Leaderboard from './pages/Leaderboard';
 import Challenges from './pages/Challenges';
+import StudyGroups from './pages/StudyGroups';
+import Messages from './pages/Messages';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -85,6 +87,9 @@ const App = () => {
                 <Route path="/live-classes/:classId" element={<LiveClassRoom />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route path="/challenges" element={<Challenges />} />
+                <Route path="/study-groups" element={<StudyGroups />} />
+                <Route path="/study-groups/:groupId" element={<StudyGroups />} />
+                <Route path="/messages" element={<Messages />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/courses" element={<CourseManagement />} />
                 <Route path="/admin/courses/new" element={<CourseForm />} />
