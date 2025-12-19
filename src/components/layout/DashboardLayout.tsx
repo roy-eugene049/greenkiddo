@@ -23,7 +23,8 @@ import {
   Trophy,
   Target,
   Users,
-  Mail
+  Mail,
+  BarChart3
 } from 'lucide-react';
 import NotificationBell from '../common/NotificationBell';
 import SearchBar from '../common/SearchBar';
@@ -61,6 +62,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         { icon: Award, label: 'Achievements', path: '/dashboard/achievements' },
         { icon: Trophy, label: 'Leaderboard', path: '/dashboard/leaderboard' },
         { icon: Target, label: 'Challenges', path: '/dashboard/challenges' },
+        { icon: BarChart3, label: 'My Analytics', path: '/dashboard/analytics' },
       ]
     },
     {
