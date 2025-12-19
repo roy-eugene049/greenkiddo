@@ -40,6 +40,9 @@ import Challenges from './pages/Challenges';
 import StudyGroups from './pages/StudyGroups';
 import Messages from './pages/Messages';
 import StudentAnalytics from './pages/StudentAnalytics';
+import PaymentHistory from './pages/PaymentHistory';
+import SubscriptionPlans from './pages/SubscriptionPlans';
+import CertificateVerification from './pages/CertificateVerification';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -92,6 +95,8 @@ const App = () => {
                 <Route path="/study-groups/:groupId" element={<StudyGroups />} />
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/analytics" element={<StudentAnalytics />} />
+                <Route path="/payment-history" element={<PaymentHistory />} />
+                <Route path="/subscription-plans" element={<SubscriptionPlans />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/courses" element={<CourseManagement />} />
                 <Route path="/admin/courses/new" element={<CourseForm />} />
@@ -158,6 +163,8 @@ const App = () => {
                 <Route path='/courses/:courseId' element={<CourseDetail />} />
                 <Route path='/courses/:courseId/lessons/:lessonId' element={<LessonView />} />
                 <Route path='/blog/:slug' element={<BlogPostDetail />} />
+                <Route path='/verify/:code' element={<CertificateVerification />} />
+                <Route path='/verify' element={<CertificateVerification />} />
                 <Route path='/comingsoon' element={<ComingSoon />} />
                 <Route
                   path="/comingsoon"
