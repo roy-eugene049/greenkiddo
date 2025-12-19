@@ -183,7 +183,7 @@ class ApiClient {
 
     // Get auth token
     const authToken = this.getAuthToken();
-    const authHeaders = authToken
+    const authHeaders: Record<string, string> = authToken
       ? { Authorization: `Bearer ${authToken}` }
       : {};
 
@@ -192,17 +192,17 @@ class ApiClient {
     
     // Handle FormData - don't stringify and don't set Content-Type
     const isFormData = body instanceof FormData;
-    const requestHeaders = isFormData
+    const requestHeaders: HeadersInit = isFormData
       ? {
           ...authHeaders,
           ...headers,
           // Don't set Content-Type for FormData, let browser set it with boundary
-        }
+        } as HeadersInit
       : {
           ...this.defaultHeaders,
           ...authHeaders,
           ...headers,
-        };
+        } as HeadersInit;
 
     const requestFn = async (): Promise<T> => {
       const fetchPromise = fetch(url, {

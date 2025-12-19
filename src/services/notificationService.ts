@@ -1,4 +1,4 @@
-import { Notification, NotificationType, NotificationPreferences } from '../types/notification';
+import { Notification, NotificationPreferences } from '../types/notification';
 
 const STORAGE_KEY_PREFIX = 'greenkiddo_notifications_';
 const PREFERENCES_KEY_PREFIX = 'greenkiddo_notif_prefs_';

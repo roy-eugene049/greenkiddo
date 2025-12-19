@@ -33,6 +33,10 @@ export interface SavedSearch {
       from: string;
       to: string;
     };
+    duration?: {
+      min?: number;
+      max?: number;
+    };
   };
   createdAt: string;
   lastUsed?: string;

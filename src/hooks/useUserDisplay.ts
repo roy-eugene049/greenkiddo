@@ -1,5 +1,5 @@
 import { useUser } from '@clerk/clerk-react';
-import { getUserPreferences, getDisplayName, getDisplayAvatar } from '../services/userPreferences';
+import { getDisplayName, getDisplayAvatar } from '../services/userPreferences';
 
 /**
  * Custom hook to get the user's display name and avatar based on their preferences

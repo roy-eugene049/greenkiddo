@@ -35,6 +35,8 @@ import BlogForm from './pages/admin/BlogForm';
 import AdminSettings from './pages/admin/AdminSettings';
 import LiveClasses from './pages/LiveClasses';
 import LiveClassRoom from './pages/LiveClassRoom';
+import Leaderboard from './pages/Leaderboard';
+import Challenges from './pages/Challenges';
 import '@fontsource/inter/400.css'; 
 import '@fontsource/inter/700.css';
 
@@ -81,6 +83,8 @@ const App = () => {
                 <Route path="/search" element={<SearchResults />} />
                 <Route path="/live-classes" element={<LiveClasses />} />
                 <Route path="/live-classes/:classId" element={<LiveClassRoom />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/challenges" element={<Challenges />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/courses" element={<CourseManagement />} />
                 <Route path="/admin/courses/new" element={<CourseForm />} />

@@ -1,5 +1,5 @@
-import { UserProgress } from '../types/course';
 import { NotificationHelpers } from './notificationService';
+import { awardPoints } from './gamificationService';
 
 interface LearningSession {
   date: string; // ISO date string (YYYY-MM-DD)
@@ -148,8 +148,11 @@ export const recordLessonCompletion = (userId: string, lessonId: string): void =
   }
 
   // Add lesson if not already completed today
-  if (!todaySession.lessonsCompleted.includes(lessonId)) {
+  const isNewCompletion = !todaySession.lessonsCompleted.includes(lessonId);
+  if (isNewCompletion) {
     todaySession.lessonsCompleted.push(lessonId);
+    // Award points for lesson completion
+    awardPoints(userId, 'lessonsCompleted', 10, 20);
   }
 
   // Update streak (same logic as recordLearningSession)
@@ -168,10 +171,22 @@ export const recordLessonCompletion = (userId: string, lessonId: string): void =
     }
   }
 
-  // Trigger streak milestone notifications
+  // Trigger streak milestone notifications and award points
   const newStreak = data.currentStreak;
-  if (newStreak > previousStreak && (newStreak === 7 || newStreak === 30 || newStreak === 100 || newStreak % 50 === 0)) {
-    NotificationHelpers.streakMilestone(userId, newStreak);
+  if (newStreak > previousStreak) {
+    if (newStreak === 7) {
+      NotificationHelpers.streakMilestone(userId, newStreak);
+      awardPoints(userId, 'streaks', 50, 100);
+    } else if (newStreak === 30) {
+      NotificationHelpers.streakMilestone(userId, newStreak);
+      awardPoints(userId, 'streaks', 200, 500);
+    } else if (newStreak === 100) {
+      NotificationHelpers.streakMilestone(userId, newStreak);
+      awardPoints(userId, 'streaks', 500, 1000);
+    } else if (newStreak % 50 === 0) {
+      NotificationHelpers.streakMilestone(userId, newStreak);
+      awardPoints(userId, 'streaks', 100, 250);
+    }
   }
 
   data.lastActivityDate = today;

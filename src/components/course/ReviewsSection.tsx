@@ -280,7 +280,7 @@ const ReviewsSection = ({ courseId }: ReviewsSectionProps) => {
             >
               <div className="flex items-start gap-4">
                 <Avatar
-                  src={review.userAvatar}
+                  avatar={review.userAvatar}
                   name={review.userName}
                   size="md"
                 />

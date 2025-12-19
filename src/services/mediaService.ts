@@ -194,24 +194,6 @@ export async function uploadFile(
     // In production, this would use the actual API
     // TODO: Replace with real API call when backend is ready
     return await mockUpload(fileToUpload, onProgress);
-
-    // Real API upload (when backend is ready)
-    // For now, use mock upload in development
-    // In production, uncomment this and remove the mockUpload call above
-    /*
-    const response = await apiClient.post<UploadResult>(
-      API_ENDPOINTS.MEDIA.UPLOAD,
-      formData,
-      {
-        headers: {
-          // Don't set Content-Type, let browser set it with boundary for FormData
-        },
-      }
-    );
-    return response;
-    */
-
-    return response;
   } catch (error) {
     const { userMessage } = handleApiError(error, 'uploadFile');
     throw new Error(userMessage);
@@ -274,7 +256,7 @@ export async function deleteFile(fileId: string): Promise<void> {
   try {
     await apiClient.delete(API_ENDPOINTS.MEDIA.DELETE(fileId));
   } catch (error) {
-    const { userMessage } = handleApiError(error, 'deleteFile');
+    const { userMessage } = handleApiError(error as Error, 'deleteFile');
     throw new Error(userMessage);
   }
 }
@@ -286,7 +268,7 @@ export async function getFileInfo(fileId: string): Promise<UploadResult> {
   try {
     return await apiClient.get<UploadResult>(API_ENDPOINTS.MEDIA.BY_ID(fileId));
   } catch (error) {
-    const { userMessage } = handleApiError(error, 'getFileInfo');
+    const { userMessage } = handleApiError(error as Error, 'getFileInfo');
     throw new Error(userMessage);
   }
 }

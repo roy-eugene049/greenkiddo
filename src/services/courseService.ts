@@ -41,7 +41,7 @@ export class CourseService {
   }
 
   // Get course by ID
-  static async getCourseById(id: string): Promise<Course | null> {
+  static async getCourseById(id: string): Promise<Course | undefined> {
     await new Promise(resolve => setTimeout(resolve, 200));
     // Check mock courses first
     let course = getCourseById(id);
@@ -49,10 +49,10 @@ export class CourseService {
     // If not found, check custom courses
     if (!course) {
       const customCourses = getCustomCourses();
-      course = customCourses.find(c => c.id === id) || null;
+      course = customCourses.find(c => c.id === id) || undefined;
     }
     
-    if (!course) return null;
+    if (!course) return undefined;
     
     // Attach lessons to course (lessons are loaded separately)
     return course;

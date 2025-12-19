@@ -41,7 +41,7 @@ export class BlogServiceAPI {
       if (error instanceof Error && 'status' in error && (error as any).status === 404) {
         return null;
       }
-      const { userMessage } = handleApiError(error, 'getPostBySlug');
+      const { userMessage } = handleApiError(error as Error, 'getPostBySlug');
       throw new Error(userMessage);
     }
   }
@@ -56,7 +56,7 @@ export class BlogServiceAPI {
       if (error instanceof Error && 'status' in error && (error as any).status === 404) {
         return null;
       }
-      const { userMessage } = handleApiError(error, 'getPostById');
+      const { userMessage } = handleApiError(error as Error, 'getPostById');
       throw new Error(userMessage);
     }
   }
@@ -66,9 +66,9 @@ export class BlogServiceAPI {
    */
   static async createPost(post: Omit<BlogPost, 'id' | 'publishedAt' | 'updatedAt' | 'views' | 'likes' | 'readTime'>): Promise<BlogPost> {
     try {
-      return await apiClient.post<BlogPost>(API_ENDPOINTS.ADMIN.BLOG.BASE, post);
+      return await apiClient.post<BlogPost>(API_ENDPOINTS.ADMIN.BLOG, post);
     } catch (error) {
-      const { userMessage } = handleApiError(error, 'createPost');
+      const { userMessage } = handleApiError(error as Error, 'createPost');
       throw new Error(userMessage);
     }
   }
@@ -80,7 +80,7 @@ export class BlogServiceAPI {
     try {
       return await apiClient.put<BlogPost>(API_ENDPOINTS.ADMIN.BLOG.BY_ID(id), post);
     } catch (error) {
-      const { userMessage } = handleApiError(error, 'updatePost');
+      const { userMessage } = handleApiError(error as Error, 'updatePost');
       throw new Error(userMessage);
     }
   }
@@ -92,7 +92,7 @@ export class BlogServiceAPI {
     try {
       await apiClient.delete(API_ENDPOINTS.ADMIN.BLOG.BY_ID(id));
     } catch (error) {
-      const { userMessage } = handleApiError(error, 'deletePost');
+      const { userMessage } = handleApiError(error as Error, 'deletePost');
       throw new Error(userMessage);
     }
   }
@@ -106,7 +106,7 @@ export class BlogServiceAPI {
         params: { q: query },
       });
     } catch (error) {
-      const { userMessage } = handleApiError(error, 'searchPosts');
+      const { userMessage } = handleApiError(error as Error, 'searchPosts');
       throw new Error(userMessage);
     }
   }

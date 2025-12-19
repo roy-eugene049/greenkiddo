@@ -1,11 +1,33 @@
 export interface AdminStats {
   totalUsers: number;
   totalCourses: number;
+  totalLessons: number;
   totalEnrollments: number;
   activeUsers: number;
   completedCourses: number;
+  coursesCompleted: number;
+  averageCompletionRate: number;
   totalRevenue?: number;
   recentActivity: AdminActivity[];
+}
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  name: string;
+  avatar?: string;
+  role: 'admin' | 'instructor' | 'student';
+  createdAt: string;
+  joinedAt: string;
+  lastActiveAt: string;
+  isActive: boolean;
+  enrolledCourses: number;
+  completedCourses: number;
+  totalProgress: number;
+  totalTimeSpent: number; // in minutes
+  streak: number;
+  certificates: number;
+  badges: string[];
 }
 
 export interface AdminActivity {

@@ -12,7 +12,6 @@ import {
   Menu,
   X,
   Search,
-  Bell,
   Settings,
   LogOut,
   PlayCircle,
@@ -20,7 +19,9 @@ import {
   Calendar,
   BookmarkCheck,
   MessageSquare,
-  Video
+  Video,
+  Trophy,
+  Target
 } from 'lucide-react';
 import NotificationBell from '../common/NotificationBell';
 import SearchBar from '../common/SearchBar';
@@ -54,6 +55,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         { icon: TrendingUp, label: 'My Progress', path: '/dashboard/progress' },
         { icon: GraduationCap, label: 'Certificates', path: '/dashboard/certificates' },
         { icon: Award, label: 'Achievements', path: '/dashboard/achievements' },
+        { icon: Trophy, label: 'Leaderboard', path: '/dashboard/leaderboard' },
+        { icon: Target, label: 'Challenges', path: '/dashboard/challenges' },
       ]
     },
     {

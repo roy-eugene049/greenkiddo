@@ -31,7 +31,7 @@ const itemVariants = {
 
 export default function Services() {
   const navigate = useNavigate();
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   const [featuredCourses, setFeaturedCourses] = useState<Course[]>([]);
 
   useEffect(() => {

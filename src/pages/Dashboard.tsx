@@ -6,18 +6,22 @@ import DashboardLayout from '../components/layout/DashboardLayout';
 import { CourseCard } from '../components/course/CourseCard';
 import { CourseService } from '../services/courseService';
 import { Course, UserProgress } from '../types/course';
-import { BookOpen, Award, Clock, TrendingUp, ArrowRight, Flame } from 'lucide-react';
+import { BookOpen, Award, Clock, TrendingUp, ArrowRight, Flame, Trophy, Target } from 'lucide-react';
 import { useUserDisplay } from '../hooks/useUserDisplay';
 import { getLearningStats, formatTimeSpent } from '../services/progressService';
 import { useCourseStore } from '../store/useCourseStore';
 import { useProgressStore } from '../store/useProgressStore';
 import NextStepsPanel from '../components/recommendations/NextStepsPanel';
 import { getRecommendations } from '../services/recommendationService';
+import { getGamificationStats } from '../services/gamificationService';
+import { PointsDisplay } from '../components/gamification/PointsDisplay';
+import { LevelDisplay } from '../components/gamification/LevelDisplay';
+import { GamificationStats } from '../types/gamification';
 
 const Dashboard = () => {
   const { user, isLoaded } = useUser();
   const { displayName } = useUserDisplay();
-  const { courses, enrolledCourses, setCourses, enrollInCourse, isEnrolled, getEnrolledCourses, loading, setLoading } = useCourseStore();
+  const { setCourses, enrollInCourse, getEnrolledCourses, loading, setLoading } = useCourseStore();
   const { calculateCourseProgress } = useProgressStore();
   const [recommendedCourses, setRecommendedCourses] = useState<Course[]>([]);
   const [progressData, setProgressData] = useState<Record<string, UserProgress>>({});
@@ -27,6 +31,7 @@ const Dashboard = () => {
     certificatesEarned: 0,
     totalTimeSpent: 0
   });
+  const [gamificationStats, setGamificationStats] = useState<GamificationStats | null>(null);
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -40,7 +45,6 @@ const Dashboard = () => {
         
         // Get enrolled courses from store
         const enrolled = getEnrolledCourses();
-        const enrolledIds = enrolled.map(c => c.id);
 
         // Get recommended courses using recommendation service
         const { getRecommendations } = await import('../services/recommendationService');
@@ -80,6 +84,10 @@ const Dashboard = () => {
           certificatesEarned: 0,
           totalTimeSpent: learningStats.totalTimeSpent
         });
+
+        // Load gamification stats
+        const gamificationData = await getGamificationStats(user.id);
+        setGamificationStats(gamificationData);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {
@@ -104,8 +112,7 @@ const Dashboard = () => {
       // Reload courses
       const allCourses = await CourseService.getAllCourses();
       setCourses(allCourses);
-      const enrolled = getEnrolledCourses();
-      const enrolledIds = enrolled.map(c => c.id);
+      getEnrolledCourses();
       // Reload recommendations
       const recommendations = await getRecommendations(user.id, 6);
       setRecommendedCourses(recommendations.map(r => r.course));
@@ -148,11 +155,73 @@ const Dashboard = () => {
           </p>
         </motion.div>
 
+        {/* Gamification Section */}
+        {gamificationStats && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"
+          >
+            <LevelDisplay level={gamificationStats.level} />
+            <PointsDisplay points={gamificationStats.points} showBreakdown={false} />
+          </motion.div>
+        )}
+
+        {/* Quick Actions */}
+        {gamificationStats && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10"
+          >
+            <Link
+              to="/dashboard/challenges"
+              className="bg-gray-900 border border-gray-800 rounded-lg p-4 hover:border-green-ecco transition-colors group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Target className="w-6 h-6 text-green-ecco" />
+                  <div>
+                    <div className="font-semibold text-white group-hover:text-green-ecco transition-colors">
+                      Challenges & Quests
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      {gamificationStats.challenges.filter(c => !c.completed).length} active
+                    </div>
+                  </div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-ecco transition-colors" />
+              </div>
+            </Link>
+            <Link
+              to="/dashboard/leaderboard"
+              className="bg-gray-900 border border-gray-800 rounded-lg p-4 hover:border-green-ecco transition-colors group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Trophy className="w-6 h-6 text-green-ecco" />
+                  <div>
+                    <div className="font-semibold text-white group-hover:text-green-ecco transition-colors">
+                      Leaderboard
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      {gamificationStats.leaderboardRank ? `Rank #${gamificationStats.leaderboardRank}` : 'View rankings'}
+                    </div>
+                  </div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-ecco transition-colors" />
+              </div>
+            </Link>
+          </motion.div>
+        )}
+
         {/* Stats Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
           className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10"
         >
           <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">

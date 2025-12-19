@@ -125,7 +125,10 @@ const SearchResults = () => {
         type: selectedTypes.length > 0 ? selectedTypes : undefined,
         category: selectedCategories.length > 0 ? selectedCategories : undefined,
         difficulty: selectedDifficulties.length > 0 ? selectedDifficulties : undefined,
-        dateRange: (dateRange.from || dateRange.to) ? dateRange : undefined,
+        dateRange: (dateRange.from || dateRange.to) ? {
+          from: dateRange.from || '',
+          to: dateRange.to || ''
+        } : undefined,
         duration: (durationRange.min !== undefined || durationRange.max !== undefined) ? durationRange : undefined,
       });
       setSavedSearches([...savedSearches, saved]);
@@ -134,10 +137,13 @@ const SearchResults = () => {
 
   const handleLoadSavedSearch = (savedSearch: SavedSearch) => {
     setSearchParams({ q: savedSearch.query });
-    setSelectedTypes(savedSearch.filters?.type || []);
+    setSelectedTypes((savedSearch.filters?.type as SearchResultType[]) || []);
     setSelectedCategories(savedSearch.filters?.category || []);
     setSelectedDifficulties(savedSearch.filters?.difficulty || []);
-    setDateRange(savedSearch.filters?.dateRange || {});
+    setDateRange(savedSearch.filters?.dateRange ? {
+      from: savedSearch.filters.dateRange.from,
+      to: savedSearch.filters.dateRange.to
+    } : {});
     setDurationRange(savedSearch.filters?.duration || {});
     if (user) {
       updateSavedSearchUsage(user.id, savedSearch.id);
@@ -298,7 +304,7 @@ const SearchResults = () => {
                     onClick={() => {
                       setSearchParams({ q: item.query });
                       if (item.filters) {
-                        setSelectedTypes(item.filters.type || []);
+                        setSelectedTypes((item.filters.type as SearchResultType[]) || []);
                         setSelectedCategories(item.filters.category || []);
                         setSelectedDifficulties(item.filters.difficulty || []);
                         setDateRange(item.filters.dateRange || {});

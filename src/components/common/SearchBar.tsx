@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, BookOpen, FileText, MessageSquare, Newspaper, Loader2, History, TrendingUp } from 'lucide-react';
+import { Search, X, BookOpen, FileText, MessageSquare, Newspaper, Loader2 } from 'lucide-react';
 import { SearchResult } from '../../types/search';
 import { quickSearch } from '../../services/searchService';
 import { getSearchHistory, getPopularSearches } from '../../services/searchHistoryService';

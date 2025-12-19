@@ -65,7 +65,7 @@ const ContentModeration = () => {
     setShowActionModal(true);
   };
 
-  const handleAction = async (action: 'approve' | 'reject' | 'dismiss' | 'delete' | 'lock' | 'unlock') => {
+  const handleAction = async (action: 'approve' | 'reject' | 'dismiss' | 'delete' | 'lock' | 'unlock' | 'pin' | 'unpin') => {
     if (!selectedReport || !user) return;
 
     setProcessing(true);

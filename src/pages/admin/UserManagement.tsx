@@ -209,7 +209,7 @@ const UserManagement = () => {
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
                           <Avatar
-                            src={user.avatar}
+                            avatar={user.avatar}
                             name={user.name}
                             size="sm"
                           />
@@ -310,7 +310,7 @@ const UserManagement = () => {
                 {/* User Info */}
                 <div className="flex items-center gap-4 pb-6 border-b border-gray-800">
                   <Avatar
-                    src={selectedUser.avatar}
+                    avatar={selectedUser.avatar}
                     name={selectedUser.name}
                     size="lg"
                   />

@@ -202,6 +202,7 @@ const VideoPlayer = ({
       }}
     >
       <div className="relative aspect-video">
+        {/* @ts-ignore - react-player types issue */}
         <ReactPlayer
           ref={playerRef}
           url={url}

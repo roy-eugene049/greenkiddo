@@ -1,8 +1,7 @@
-import { SearchResult, SearchOptions, SearchResultType } from '../types/search';
+import { SearchResult, SearchOptions } from '../types/search';
 import { CourseService } from './courseService';
 import { Course, Lesson } from '../types/course';
 import { ForumService } from './forumService';
-import { ForumPost } from '../types/forum';
 
 // Mock blog posts for search
 const mockBlogPosts = [

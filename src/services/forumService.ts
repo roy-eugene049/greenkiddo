@@ -363,7 +363,7 @@ export class ForumService {
     return newComment;
   }
 
-  static async votePost(postId: string, userId: string, vote: 'upvote' | 'downvote' | null): Promise<boolean> {
+  static async votePost(postId: string, _userId: string, vote: 'upvote' | 'downvote' | null): Promise<boolean> {
     await new Promise(resolve => setTimeout(resolve, 200));
     const post = mockForumPosts.find(p => p.id === postId);
     if (post) {
@@ -378,7 +378,7 @@ export class ForumService {
     return false;
   }
 
-  static async voteComment(commentId: string, userId: string, vote: 'upvote' | 'downvote' | null): Promise<boolean> {
+  static async voteComment(commentId: string, _userId: string, vote: 'upvote' | 'downvote' | null): Promise<boolean> {
     await new Promise(resolve => setTimeout(resolve, 200));
     const comment = mockComments.find(c => c.id === commentId);
     if (comment) {
